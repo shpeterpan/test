@@ -1071,679 +1071,725 @@
     </div>
 
 
-    <script type="module">
-        window.addEventListener('DOMContentLoaded', () => {
-            // --- API Endpoints ---
-            const apiKey = ""; // API 키는 Canvas 환경에서 자동으로 제공됩니다.
-            const textApiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
-            const imageApiUrl = `https://generativelanguage.googleapis.com/v1beta/models/imagen-3.0-generate-002:predict?key=${apiKey}`;
-            const ttsApiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-tts:generateContent?key=${apiKey}`;
+    <!-- 
+  이 파일은 기존 'shanghai_trip.html'의 <script type="module">...</script> 부분만 
+  보여줍니다.
+  이 새로운 <script> 내용으로 기존 <script> 블록 전체를 교체하세요.
+  HTML의 <head>와 <body> 부분은 그대로 두시면 됩니다.
+-->
 
-            // --- Modal Control (공통) ---
-            const phraseModal = document.getElementById('phraseModal');
-            const phraseModalContent = document.getElementById('phrase-modal-content');
-            const infoModal = document.getElementById('infoModal');
-            const infoModalContent = document.getElementById('info-modal-content');
-            const imageGenModal = document.getElementById('imageGenModal');
-            const imageModalContent = document.getElementById('image-modal-content');
+<!-- (기존 <body>...</body> 태그 바로 위에 이 <script> 블록을 통째로 교체) -->
+<script type="module">
+  window.addEventListener('DOMContentLoaded', () => {
+      // --- API Endpoints ---
+      // !! 중요 !!
+      // 모든 API 주소는 이제 우리 서버 함수의 단일 주소를 가리킵니다.
+      const geminiProxyUrl = "/.netlify/functions/callGemini";
 
-            function openModal(modal, content) {
-                modal.classList.remove('hidden');
-                setTimeout(() => {
-                    modal.classList.remove('opacity-0');
-                    content.classList.remove('scale-95', 'opacity-0');
-                }, 10);
-            }
+      // --- Modal Control (공통) ---
+      // (이 부분은 변경 없음)
+      const phraseModal = document.getElementById('phraseModal');
+// ... (기존 스크립트 코드와 동일) ...
+      const phraseModalContent = document.getElementById('phrase-modal-content');
+      const infoModal = document.getElementById('infoModal');
+      const infoModalContent = document.getElementById('info-modal-content');
+      const imageGenModal = document.getElementById('imageGenModal');
+      const imageModalContent = document.getElementById('image-modal-content');
 
-            function closeModal(modal, content) {
-                modal.classList.add('opacity-0');
-                content.classList.add('scale-95', 'opacity-0');
-                setTimeout(() => modal.classList.add('hidden'), 200);
-            }
+      function openModal(modal, content) {
+          modal.classList.remove('hidden');
+          setTimeout(() => {
+              modal.classList.remove('opacity-0');
+              content.classList.remove('scale-95', 'opacity-0');
+          }, 10);
+      }
 
-            // --- API Call Helper (Exponential Backoff) ---
-            async function fetchWithBackoff(apiUrl, payload, maxRetries = 5) {
-                let delay = 1000; // 1초
-                for (let i = 0; i < maxRetries; i++) {
-                    try {
-                        const response = await fetch(apiUrl, {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify(payload)
-                        });
+      function closeModal(modal, content) {
+          modal.classList.add('opacity-0');
+          content.classList.add('scale-95', 'opacity-0');
+          setTimeout(() => modal.classList.add('hidden'), 200);
+      }
 
-                        if (response.ok) {
-                            return await response.json();
-                        } else if (response.status === 429) {
-                            // Too Many Requests,
-                        } else {
-                            throw new Error(`HTTP error! status: ${response.status}`);
-                        }
-                    } catch (error) {
-                        console.warn(`Attempt ${i + 1} failed: ${error.message}. Retrying in ${delay}ms...`);
-                    }
-                    await new Promise(resolve => setTimeout(resolve, delay));
-                    delay *= 2;
-                }
-                throw new Error("API 요청이 여러 번 실패했습니다.");
-            }
+      // --- API Call Helper (Exponential Backoff) ---
+      // !! 중요 !!
+      // 이제 이 함수는 우리 서버 함수(proxy)를 호출합니다.
+      async function fetchWithBackoff(apiType, originalPayload, maxRetries = 5) {
+          let delay = 1000;
+          
+          // 프록시 서버로 보낼 전체 페이로드
+          const proxyPayload = {
+              apiType: apiType,
+              originalPayload: originalPayload
+          };
 
-            // --- 기능 1: 여행 회화 도우미 ---
-            const openPhraseModalBtn = document.getElementById('openPhraseModalBtn');
-            const closePhraseModalBtn = document.getElementById('closePhraseModalBtn');
-            const generatePhraseBtn = document.getElementById('generatePhraseBtn');
-            const situationInput = document.getElementById('situationInput');
-            const phraseResult = document.getElementById('phraseResult');
-            const phraseResultWrapper = document.getElementById('phraseResultWrapper');
-            const loader = document.getElementById('loader');
-            const btnText = document.getElementById('btn-text');
-            const btnLoader = document.getElementById('btn-loader');
+          for (let i = 0; i < maxRetries; i++) {
+              try {
+                  const response = await fetch(geminiProxyUrl, { // Netlify 함수 주소로 요청
+                      method: 'POST',
+                      headers: { 'Content-Type': 'application/json' },
+                      body: JSON.stringify(proxyPayload) // 프록시 페이로드 전송
+                  });
 
-            if (openPhraseModalBtn) openPhraseModalBtn.addEventListener('click', () => openModal(phraseModal, phraseModalContent));
-            if (closePhraseModalBtn) closePhraseModalBtn.addEventListener('click', () => closeModal(phraseModal, phraseModalContent));
-            if (phraseModal) phraseModal.addEventListener('click', (e) => {
-                if (e.target === phraseModal) closeModal(phraseModal, phraseModalContent);
-            });
-            
-            // *** FIX: 함수 정의를 이벤트 리스너보다 먼저 오도록 이동 ***
-            async function handleGeneratePhrases() {
-                const userInput = situationInput.value.trim();
-                if (!userInput) {
-                    phraseResult.innerHTML = `<p class="text-red-500">상황을 입력해주세요.</p>`;
-                    return;
-                }
-                setLoadingState(true);
-                phraseResult.innerHTML = '';
-                
-                const systemPrompt = "You are a helpful travel assistant for a Korean tourist in Shanghai. Generate useful Chinese phrases for the given situation. Provide the Chinese characters, pinyin, and Korean translation.";
-                const userQuery = `Generate 5-7 useful phrases for this situation: "${userInput}"`;
+                  if (response.ok) {
+                      return await response.json(); // Netlify 함수가 전달해준 Gemini 응답
+                  } else if (response.status === 429) {
+                      // Too Many Requests
+                  } else {
+                      const errorData = await response.json();
+                      throw new Error(errorData.error || `서버 함수 오류: ${response.status}`);
+                  }
+              } catch (error) {
+                  console.warn(`Attempt ${i + 1} failed: ${error.message}. Retrying in ${delay}ms...`);
+              }
+              await new Promise(resolve => setTimeout(resolve, delay));
+              delay *= 2;
+          }
+          throw new Error("API 요청이 여러 번 실패했습니다.");
+      }
 
-                const payload = {
-                    contents: [{ parts: [{ text: userQuery }] }],
-                    systemInstruction: { parts: [{ text: systemPrompt }] },
-                    generationConfig: {
-                        responseMimeType: "application/json",
-                        responseSchema: {
-                            type: "OBJECT",
-                            properties: {
-                                phrases: {
-                                    type: "ARRAY",
-                                    items: {
-                                        type: "OBJECT",
-                                        properties: {
-                                            "chinese": { "type": "STRING" },
-                                            "pinyin": { "type": "STRING" },
-                                            "korean": { "type": "STRING" }
-                                        },
-                                        "required": ["chinese", "pinyin", "korean"]
-                                    }
-                                }
-                            }
-                        }
-                    }
-                };
+      // --- 기능 1: 여행 회화 도우미 ---
+      const openPhraseModalBtn = document.getElementById('openPhraseModalBtn');
+      const closePhraseModalBtn = document.getElementById('closePhraseModalBtn');
+      const generatePhraseBtn = document.getElementById('generatePhraseBtn');
+      const situationInput = document.getElementById('situationInput');
+      const phraseResult = document.getElementById('phraseResult');
+      const phraseResultWrapper = document.getElementById('phraseResultWrapper');
+      const loader = document.getElementById('loader');
+      const btnText = document.getElementById('btn-text');
+      const btnLoader = document.getElementById('btn-loader');
 
-                try {
-                    const result = await fetchWithBackoff(textApiUrl, payload);
-                    const part = result.candidates?.[0]?.content?.parts?.[0];
-                    if (part && part.text) {
-                        const data = JSON.parse(part.text);
-                        renderPhrases(data.phrases);
-                    } else {
-                        throw new Error("유효한 응답을 받지 못했습니다.");
-                    }
-                } catch (error) {
-                    console.error("Error generating phrases:", error);
-                    phraseResult.innerHTML = `<p class="text-red-500">회화 생성 중 오류가 발생했습니다: ${error.message}</p>`;
-                } finally {
-                    setLoadingState(false);
-                }
-            }
-            
-            if (generatePhraseBtn) generatePhraseBtn.addEventListener('click', handleGeneratePhrases);
+      if (openPhraseModalBtn) openPhraseModalBtn.addEventListener('click', () => openModal(phraseModal, phraseModalContent));
+      if (closePhraseModalBtn) closePhraseModalBtn.addEventListener('click', () => closeModal(phraseModal, phraseModalContent));
+      if (phraseModal) phraseModal.addEventListener('click', (e) => {
+          if (e.target === phraseModal) closeModal(phraseModal, phraseModalContent);
+      });
+      
+      async function handleGeneratePhrases() {
+          const userInput = situationInput.value.trim();
+          if (!userInput) {
+              phraseResult.innerHTML = `<p class="text-red-500">상황을 입력해주세요.</p>`;
+              return;
+          }
+          setLoadingState(true);
+          phraseResult.innerHTML = '';
+          
+          const systemPrompt = "You are a helpful travel assistant for a Korean tourist in Shanghai. Generate useful Chinese phrases for the given situation. Provide the Chinese characters, pinyin, and Korean translation.";
+          const userQuery = `Generate 5-7 useful phrases for this situation: "${userInput}"`;
 
-            function renderPhrases(phrases) {
-                if (!phrases || phrases.length === 0) {
-                    phraseResult.innerHTML = `<p class="text-gray-500">생성된 회화가 없습니다.</p>`;
-                    return;
-                }
-                phraseResult.innerHTML = phrases.map(phrase => `
-                    <div class="phrase-item p-3 border rounded-lg bg-gray-50 shadow-sm">
-                        <p class="text-xl font-bold text-gray-900">${phrase.chinese}</p>
-                        <p class="text-md italic text-gray-600">${phrase.pinyin}</p>
-                        <p class="text-md text-gray-700 mt-1">${phrase.korean}</p>
-                        <button class="speak-btn mt-3 inline-flex items-center gap-2 px-3 py-1.5 bg-blue-100 text-blue-700 font-medium rounded-md hover:bg-blue-200 transition-all text-sm" data-text-to-speak="${phrase.chinese}">
-                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M19.114 5.636a9 9 0 010 12.728M16.463 8.288a5.25 5.25 0 010 7.424M6.75 8.25l4.72-4.72a.75.75 0 011.28.53v15.88a.75.75 0 01-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.009 9.009 0 012.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75z" /></svg>
-                            <span class="btn-text">듣기</span>
-                            <span class="btn-spinner hidden"></span>
-                        </button>
-                    </div>
-                `).join('');
-            }
+          // !! 중요: 원본 Gemini 페이로드를 만듭니다.
+          const originalPayload = {
+              contents: [{ parts: [{ text: userQuery }] }],
+              systemInstruction: { parts: [{ text: systemPrompt }] },
+              generationConfig: {
+                  responseMimeType: "application/json",
+                  responseSchema: {
+                      type: "OBJECT",
+                      properties: {
+                          phrases: {
+                              type: "ARRAY",
+                              items: {
+                                  type: "OBJECT",
+                                  properties: {
+                                      "chinese": { "type": "STRING" },
+                                      "pinyin": { "type": "STRING" },
+                                      "korean": { "type": "STRING" }
+                                  },
+                                  "required": ["chinese", "pinyin", "korean"]
+                              }
+                          }
+                      }
+                  }
+              }
+          };
 
-            function setLoadingState(isLoading) {
-                if (isLoading) {
-                    loader.classList.remove('hidden');
-                    generatePhraseBtn.disabled = true;
-                    btnText.classList.add('hidden');
-                    btnLoader.classList.remove('hidden');
-                } else {
-                    loader.classList.add('hidden');
-                    generatePhraseBtn.disabled = false;
-                    btnText.classList.remove('hidden');
-                    btnLoader.classList.add('hidden');
-                }
-            }
+          try {
+              // !! 중요: 호출 방식 변경
+              // 'text' 유형과 원본 페이로드를 프록시 헬퍼로 전달합니다.
+              const result = await fetchWithBackoff('text', originalPayload);
+              
+              const part = result.candidates?.[0]?.content?.parts?.[0];
+              if (part && part.text) {
+                  const data = JSON.parse(part.text);
+                  renderPhrases(data.phrases);
+              } else {
+                  throw new Error("유효한 응답을 받지 못했습니다.");
+              }
+          } catch (error) {
+              console.error("Error generating phrases:", error);
+              phraseResult.innerHTML = `<p class="text-red-500">회화 생성 중 오류가 발생했습니다: ${error.message}</p>`;
+          } finally {
+              setLoadingState(false);
+          }
+      }
+      
+      if (generatePhraseBtn) generatePhraseBtn.addEventListener('click', handleGeneratePhrases);
 
-            if (phraseResultWrapper) phraseResultWrapper.addEventListener('click', async (e) => {
-                const speakButton = e.target.closest('.speak-btn');
-                if (speakButton) {
-                    const textToSpeak = speakButton.dataset.textToSpeak;
-                    const buttonTextElem = speakButton.querySelector('.btn-text');
-                    const buttonSpinnerElem = speakButton.querySelector('.btn-spinner');
-                    speakButton.disabled = true;
-                    buttonTextElem.textContent = '로딩중...';
-                    buttonSpinnerElem.classList.remove('hidden');
-                    try {
-                        await handleSpeakText(textToSpeak);
-                    } catch (error) {
-                        console.error("Error generating speech:", error);
-                        buttonTextElem.textContent = '오류';
-                        alert(`음성 생성 중 오류가 발생했습니다: ${error.message}`);
-                    } finally {
-                        speakButton.disabled = false;
-                        buttonTextElem.textContent = '듣기';
-                        buttonSpinnerElem.classList.add('hidden');
-                    }
-                }
-            });
+      function renderPhrases(phrases) {
+          // (이 함수는 변경 없음)
+          if (!phrases || phrases.length === 0) {
+              phraseResult.innerHTML = `<p class="text-gray-500">생성된 회화가 없습니다.</p>`;
+              return;
+          }
+          phraseResult.innerHTML = phrases.map(phrase => `
+              <div class="phrase-item p-3 border rounded-lg bg-gray-50 shadow-sm">
+                  <p class="text-xl font-bold text-gray-900">${phrase.chinese}</p>
+                  <p class="text-md italic text-gray-600">${phrase.pinyin}</p>
+                  <p class="text-md text-gray-700 mt-1">${phrase.korean}</p>
+                  <button class="speak-btn mt-3 inline-flex items-center gap-2 px-3 py-1.5 bg-blue-100 text-blue-700 font-medium rounded-md hover:bg-blue-200 transition-all text-sm" data-text-to-speak="${phrase.chinese}">
+                      <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M19.114 5.636a9 9 0 010 12.728M16.463 8.288a5.25 5.25 0 010 7.424M6.75 8.25l4.72-4.72a.75.75 0 011.28.53v15.88a.75.75 0 01-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.009 9.009 0 012.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75z" /></svg>
+                      <span class="btn-text">듣기</span>
+                      <span class="btn-spinner hidden"></span>
+                  </button>
+              </div>
+          `).join('');
+      }
 
-            async function handleSpeakText(textToSpeak) {
-                const payload = {
-                    contents: [{ parts: [{ text: `Say in standard Mandarin Chinese: ${textToSpeak}` }] }],
-                    generationConfig: {
-                        responseModalities: ["AUDIO"],
-                        speechConfig: { voiceConfig: { prebuiltVoiceConfig: { voiceName: "Charon" } } }
-                    },
-                    model: "gemini-2.5-flash-preview-tts"
-                };
-                const result = await fetchWithBackoff(ttsApiUrl, payload);
-                const part = result.candidates?.[0]?.content?.parts?.[0];
-                const audioData = part?.inlineData?.data;
-                const mimeType = part?.inlineData?.mimeType;
+      function setLoadingState(isLoading) {
+          // (이 함수는 변경 없음)
+          if (isLoading) {
+              loader.classList.remove('hidden');
+              generatePhraseBtn.disabled = true;
+              btnText.classList.add('hidden');
+              btnLoader.classList.remove('hidden');
+          } else {
+              loader.classList.add('hidden');
+              generatePhraseBtn.disabled = false;
+              btnText.classList.remove('hidden');
+              btnLoader.classList.add('hidden');
+          }
+      }
 
-                if (audioData && mimeType && mimeType.startsWith("audio/")) {
-                    const sampleRateMatch = mimeType.match(/rate=(\d+)/);
-                    if (!sampleRateMatch) throw new Error("Sample rate not found in mimeType");
-                    const sampleRate = parseInt(sampleRateMatch[1], 10);
-                    const pcmData = base64ToArrayBuffer(audioData);
-                    const pcm16 = new Int16Array(pcmData);
-                    const wavBlob = pcmToWav(pcm16, sampleRate);
-                    const audioUrl = URL.createObjectURL(wavBlob);
-                    const audio = new Audio(audioUrl);
-                    await audio.play();
-                } else {
-                    throw new Error("유효한 오디오 데이터를 받지 못했습니다.");
-                }
-            }
+      if (phraseResultWrapper) phraseResultWrapper.addEventListener('click', async (e) => {
+          const speakButton = e.target.closest('.speak-btn');
+          if (speakButton) {
+              const textToSpeak = speakButton.dataset.textToSpeak;
+              const buttonTextElem = speakButton.querySelector('.btn-text');
+              const buttonSpinnerElem = speakButton.querySelector('.btn-spinner');
+              speakButton.disabled = true;
+              buttonTextElem.textContent = '로딩중...';
+              buttonSpinnerElem.classList.remove('hidden');
+              try {
+                  await handleSpeakText(textToSpeak);
+              } catch (error) {
+                  console.error("Error generating speech:", error);
+                  buttonTextElem.textContent = '오류';
+                  alert(`음성 생성 중 오류가 발생했습니다: ${error.message}`);
+              } finally {
+                  speakButton.disabled = false;
+                  buttonTextElem.textContent = '듣기';
+                  buttonSpinnerElem.classList.add('hidden');
+              }
+          }
+      });
 
-            // --- NEW: 기능 1.5: 여행 꿀팁 ---
-            const getTravelTipBtn = document.getElementById('getTravelTipBtn');
-            const tipInput = document.getElementById('tipInput');
-            const tipResultWrapper = document.getElementById('tipResultWrapper');
-            const tipResult = document.getElementById('tipResult');
-            const tipBtnText = document.getElementById('tipBtnText');
-            const tipBtnLoader = document.getElementById('tipBtnLoader');
-            const tipLoader = document.getElementById('tipLoader');
+      async function handleSpeakText(textToSpeak) {
+          // !! 중요: 원본 Gemini TTS 페이로드를 만듭니다.
+          const originalPayload = {
+              contents: [{ parts: [{ text: `Say in standard Mandarin Chinese: ${textToSpeak}` }] }],
+              generationConfig: {
+                  responseModalities: ["AUDIO"],
+                  speechConfig: { voiceConfig: { prebuiltVoiceConfig: { voiceName: "Charon" } } }
+              },
+              model: "gemini-2.5-flash-preview-tts" // 모델 이름은 프록시에서 사용
+          };
 
-            if (getTravelTipBtn) {
-                getTravelTipBtn.addEventListener('click', handleGetTravelTip);
-            }
+          // !! 중요: 호출 방식 변경
+          const result = await fetchWithBackoff('tts', originalPayload);
 
-            async function handleGetTravelTip() {
-                const userInput = tipInput.value.trim();
-                if (!userInput) {
-                    tipResultWrapper.classList.remove('hidden');
-                    tipResult.innerHTML = `<p class="text-red-500">질문을 입력해주세요.</p>`;
-                    return;
-                }
+          const part = result.candidates?.[0]?.content?.parts?.[0];
+          const audioData = part?.inlineData?.data;
+          const mimeType = part?.inlineData?.mimeType;
 
-                // Set loading state
-                getTravelTipBtn.disabled = true;
-                tipBtnText.classList.add('hidden');
-                tipBtnLoader.classList.remove('hidden');
-                tipResultWrapper.classList.remove('hidden');
-                tipResult.innerHTML = '';
-                tipLoader.classList.remove('hidden');
+          if (audioData && mimeType && mimeType.startsWith("audio/")) {
+              const sampleRateMatch = mimeType.match(/rate=(\d+)/);
+              if (!sampleRateMatch) throw new Error("Sample rate not found in mimeType");
+              const sampleRate = parseInt(sampleRateMatch[1], 10);
+              const pcmData = base64ToArrayBuffer(audioData);
+              const pcm16 = new Int16Array(pcmData);
+              const wavBlob = pcmToWav(pcm16, sampleRate);
+              const audioUrl = URL.createObjectURL(wavBlob);
+              const audio = new Audio(audioUrl);
+              await audio.play();
+          } else {
+              throw new Error("유효한 오디오 데이터를 받지 못했습니다.");
+          }
+      }
 
-                const systemPrompt = "You are a helpful travel guide for a Korean tourist in Shanghai. Answer their question concisely in Korean. Provide practical, actionable advice.";
-                const userQuery = `My question is: "${userInput}". Give me a helpful tip.`;
+      // --- 기능 1.5: 여행 꿀팁 ---
+      const getTravelTipBtn = document.getElementById('getTravelTipBtn');
+      const tipInput = document.getElementById('tipInput');
+      const tipResultWrapper = document.getElementById('tipResultWrapper');
+      const tipResult = document.getElementById('tipResult');
+      const tipBtnText = document.getElementById('tipBtnText');
+      const tipBtnLoader = document.getElementById('tipBtnLoader');
+      const tipLoader = document.getElementById('tipLoader');
 
-                const payload = {
-                    contents: [{ parts: [{ text: userQuery }] }],
-                    systemInstruction: { parts: [{ text: systemPrompt }] }
-                };
+      if (getTravelTipBtn) {
+          getTravelTipBtn.addEventListener('click', handleGetTravelTip);
+      }
 
-                try {
-                    const result = await fetchWithBackoff(textApiUrl, payload);
-                    const text = result.candidates?.[0]?.content?.parts?.[0]?.text;
-                    
-                    if (text) {
-                        tipResult.innerHTML = `<p>${text.replace(/\n/g, '<br>')}</p>`;
-                    } else {
-                        throw new Error("유효한 답변을 받지 못했습니다.");
-                    }
-                } catch (error) {
-                    console.error("Error getting travel tip:", error);
-                    tipResult.innerHTML = `<p class="text-red-500">팁을 가져오는 중 오류가 발생했습니다: ${error.message}</p>`;
-                } finally {
-                    // Unset loading state
-                    getTravelTipBtn.disabled = false;
-                    tipBtnText.classList.remove('hidden');
-                    tipBtnLoader.classList.add('hidden');
-                    tipLoader.classList.add('hidden');
-                }
-            }
+      async function handleGetTravelTip() {
+          const userInput = tipInput.value.trim();
+          if (!userInput) {
+              tipResultWrapper.classList.remove('hidden');
+              tipResult.innerHTML = `<p class="text-red-500">질문을 입력해주세요.</p>`;
+              return;
+          }
 
+          getTravelTipBtn.disabled = true;
+          tipBtnText.classList.add('hidden');
+          tipBtnLoader.classList.remove('hidden');
+          tipResultWrapper.classList.remove('hidden');
+          tipResult.innerHTML = '';
+          tipLoader.classList.remove('hidden');
 
-            // --- 기능 5: 음성 인식 및 번역 ---
-            const recordReplyBtn = document.getElementById('recordReplyBtn');
-            const recordBtnText = document.getElementById('recordBtnText');
-            const sttStatus = document.getElementById('sttStatus');
-            const translationResultWrapper = document.getElementById('translationResultWrapper');
-            const translationResult = document.getElementById('translationResult');
+          const systemPrompt = "You are a helpful travel guide for a Korean tourist in Shanghai. Answer their question concisely in Korean. Provide practical, actionable advice.";
+          const userQuery = `My question is: "${userInput}". Give me a helpful tip.`;
 
-            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-            let recognition;
+          // !! 중요: 원본 Gemini 페이로드
+          const originalPayload = {
+              contents: [{ parts: [{ text: userQuery }] }],
+              systemInstruction: { parts: [{ text: systemPrompt }] }
+          };
 
-            if (SpeechRecognition && recordReplyBtn) {
-                recognition = new SpeechRecognition();
-                recognition.lang = 'zh-CN'; // 중국어(간체)
-                recognition.interimResults = false;
-                recognition.maxAlternatives = 1;
-
-                recordReplyBtn.addEventListener('click', () => {
-                    if (recordBtnText.textContent === '답변 듣기 시작') {
-                        try {
-                            recognition.start();
-                            recordBtnText.textContent = '듣는 중...';
-                            sttStatus.textContent = '원어민의 답변을 듣고 있습니다...';
-                            recordReplyBtn.classList.replace('bg-red-600', 'bg-gray-500');
-                            recordReplyBtn.classList.replace('hover:bg-red-700', 'hover:bg-gray-600');
-                            translationResultWrapper.classList.add('hidden');
-                            translationResult.innerHTML = '';
-                        } catch (e) {
-                            sttStatus.textContent = '오류: 이미 듣고 있습니다.';
-                        }
-                    } else {
-                        recognition.stop();
-                        recordBtnText.textContent = '답변 듣기 시작';
-                        sttStatus.textContent = '마이크 버튼을 누르고 말씀하세요.';
-                        recordReplyBtn.classList.replace('bg-gray-500', 'bg-red-600');
-                        recordReplyBtn.classList.replace('hover:bg-gray-600', 'hover:bg-red-700');
-                    }
-                });
-
-                recognition.onresult = (event) => {
-                    const transcribedText = event.results[0][0].transcript;
-                    sttStatus.textContent = `인식된 중국어: ${transcribedText}`;
-                    handleTranslate(transcribedText);
-                };
-
-                recognition.onspeechend = () => {
-                    recognition.stop();
-                    recordBtnText.textContent = '답변 듣기 시작';
-                    sttStatus.textContent = '음성 인식이 완료되었습니다. 번역 중...';
-                    recordReplyBtn.classList.replace('bg-gray-500', 'bg-red-600');
-                    recordReplyBtn.classList.replace('hover:bg-gray-600', 'hover:bg-red-700');
-                };
-
-                recognition.onend = () => {
-                    if (recordBtnText.textContent !== '답변 듣기 시작') {
-                        recordBtnText.textContent = '답변 듣기 시작';
-                        recordReplyBtn.classList.replace('bg-gray-500', 'bg-red-600');
-                        recordReplyBtn.classList.replace('hover:bg-gray-600', 'hover:bg-red-700');
-                    }
-                };
-
-                recognition.onerror = (event) => {
-                    let errorMessage = `음성 인식 오류: ${event.error}.`;
-                    if (event.error === 'not-allowed') {
-                        errorMessage = '마이크 접근 권한이 차단되었습니다. 브라우저 설정을 확인해주세요.';
-                    } else if (event.error === 'no-speech') {
-                        errorMessage = '음성이 감지되지 않았습니다. 다시 시도해주세요.';
-                    }
-                    sttStatus.textContent = errorMessage;
-                    recordBtnText.textContent = '답변 듣기 시작';
-                    recordReplyBtn.classList.replace('bg-gray-500', 'bg-red-600');
-                    recordReplyBtn.classList.replace('hover:bg-gray-600', 'hover:bg-red-700');
-                };
-
-                async function handleTranslate(textToTranslate) {
-                    translationResultWrapper.classList.remove('hidden');
-                    translationResult.innerHTML = `<p class="text-gray-500">번역 중...</p>`;
-                    
-                    const systemPrompt = "You are an expert translator. Translate the given Chinese text to Korean.";
-                    const userQuery = `Translate this to Korean: "${textToTranslate}"`;
-                    const payload = {
-                        contents: [{ parts: [{ text: userQuery }] }],
-                        systemInstruction: { parts: [{ text: systemPrompt }] }
-                    };
-
-                    try {
-                        const result = await fetchWithBackoff(textApiUrl, payload);
-                        const translatedText = result.candidates?.[0]?.content?.parts?.[0]?.text;
-                        
-                        if (translatedText) {
-                            translationResult.innerHTML = `<p class="text-lg font-semibold text-blue-700">${translatedText}</p>`;
-                        } else {
-                            throw new Error("유효한 번역을 받지 못했습니다.");
-                        }
-                    } catch (error) {
-                        console.error("Error translating text:", error);
-                        translationResult.innerHTML = `<p class="text-red-500">번역 중 오류가 발생했습니다: ${error.message}</p>`;
-                    }
-                }
-
-            } else if (recordReplyBtn) {
-                // SpeechRecognition API 미지원
-                recordReplyBtn.disabled = true;
-                sttStatus.textContent = '이 브라우저는 음성 인식을 지원하지 않습니다. Chrome 브라우저를 사용해 보세요.';
-                recordReplyBtn.classList.replace('bg-red-600', 'bg-gray-400');
-                recordReplyBtn.classList.replace('hover:bg-red-700', 'cursor-not-allowed');
-            }
+          try {
+              // !! 중요: 호출 방식 변경
+              const result = await fetchWithBackoff('text', originalPayload);
+              const text = result.candidates?.[0]?.content?.parts?.[0]?.text;
+              
+              if (text) {
+                  tipResult.innerHTML = `<p>${text.replace(/\n/g, '<br>')}</p>`;
+              } else {
+                  throw new Error("유효한 답변을 받지 못했습니다.");
+              }
+          } catch (error) {
+              console.error("Error getting travel tip:", error);
+              tipResult.innerHTML = `<p class="text-red-500">팁을 가져오는 중 오류가 발생했습니다: ${error.message}</p>`;
+          } finally {
+              getTravelTipBtn.disabled = false;
+              tipBtnText.classList.remove('hidden');
+              tipBtnLoader.classList.add('hidden');
+              tipLoader.classList.add('hidden');
+          }
+      }
 
 
-            // --- 기능 2 & 3: 정보 / 맛집 추천 ---
-            const itineraryMain = document.getElementById('itinerary-main');
-            const infoModalTitle = document.getElementById('info-modal-title');
-            const infoResult = document.getElementById('infoResult');
-            const infoLoader = document.getElementById('infoLoader');
-            const closeInfoModalBtn = document.getElementById('closeInfoModalBtn');
+      // --- 기능 5: 음성 인식 및 번역 ---
+      const recordReplyBtn = document.getElementById('recordReplyBtn');
+      // ... (이 기능은 브라우저 내장 API만 사용하므로 코드 변경 없음) ...
+      // ... (handleTranslate 함수만 수정 필요) ...
+      const recordBtnText = document.getElementById('recordBtnText');
+      const sttStatus = document.getElementById('sttStatus');
+      const translationResultWrapper = document.getElementById('translationResultWrapper');
+      const translationResult = document.getElementById('translationResult');
 
-            if (itineraryMain) itineraryMain.addEventListener('click', (e) => {
-                const infoBtn = e.target.closest('.learn-more-btn');
-                const foodBtn = e.target.closest('.food-recommend-btn');
-                const imageBtn = e.target.closest('.image-summary-btn');
-                const reviewBtn = e.target.closest('.generate-trip-review-btn'); // NEW
-                
-                if (infoBtn) {
-                    const location = infoBtn.dataset.location;
-                    handleGetInfo(location);
-                }
-                if (foodBtn) {
-                    const location = foodBtn.dataset.location;
-                    handleGetFoodRecs(location);
-                }
-                if (imageBtn) {
-                    const summary = imageBtn.dataset.daySummary;
-                    handleGenerateImage(summary, imageBtn);
-                }
-                if (reviewBtn) { // NEW
-                    handleGenerateTripReview(reviewBtn);
-                }
-            });
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      let recognition;
 
-            if (closeInfoModalBtn) closeInfoModalBtn.addEventListener('click', () => closeModal(infoModal, infoModalContent));
-            if (infoModal) infoModal.addEventListener('click', (e) => {
-                if (e.target === infoModal) closeModal(infoModal, infoModalContent);
-            });
+      if (SpeechRecognition && recordReplyBtn) {
+          recognition = new SpeechRecognition();
+          recognition.lang = 'zh-CN'; // 중국어(간체)
+          recognition.interimResults = false;
+          recognition.maxAlternatives = 1;
 
-            async function handleGetInfo(location) {
-                infoModalTitle.textContent = `✨ ${location} 알아보기`;
-                infoResult.innerHTML = '';
-                infoLoader.classList.remove('hidden');
-                openModal(infoModal, infoModalContent);
+          recordReplyBtn.addEventListener('click', () => {
+              if (recordBtnText.textContent === '답변 듣기 시작') {
+                  try {
+                      recognition.start();
+                      recordBtnText.textContent = '듣는 중...';
+                      sttStatus.textContent = '원어민의 답변을 듣고 있습니다...';
+                      recordReplyBtn.classList.replace('bg-red-600', 'bg-gray-500');
+                      recordReplyBtn.classList.replace('hover:bg-red-700', 'hover:bg-gray-600');
+                      translationResultWrapper.classList.add('hidden');
+                      translationResult.innerHTML = '';
+                  } catch (e) {
+                      sttStatus.textContent = '오류: 이미 듣고 있습니다.';
+                  }
+              } else {
+                  recognition.stop();
+                  recordBtnText.textContent = '답변 듣기 시작';
+                  sttStatus.textContent = '마이크 버튼을 누르고 말씀하세요.';
+                  recordReplyBtn.classList.replace('bg-gray-500', 'bg-red-600');
+                  recordReplyBtn.classList.replace('hover:bg-gray-600', 'hover:bg-red-700');
+              }
+          });
 
-                const systemPrompt = "You are a tour guide. Provide a brief, interesting fact or history about the following location in Korean. Keep it concise and easy to read (2-3 sentences).";
-                const userQuery = `Tell me an interesting fact about ${location} in Shanghai.`;
-                const payload = {
-                    contents: [{ parts: [{ text: userQuery }] }],
-                    systemInstruction: { parts: [{ text: systemPrompt }] }
-                };
+          recognition.onresult = (event) => {
+              const transcribedText = event.results[0][0].transcript;
+              sttStatus.textContent = `인식된 중국어: ${transcribedText}`;
+              handleTranslate(transcribedText); // 이 함수가 Gemini를 호출
+          };
 
-                try {
-                    const result = await fetchWithBackoff(textApiUrl, payload);
-                    const text = result.candidates?.[0]?.content?.parts?.[0]?.text;
-                    if (text) {
-                        infoResult.innerHTML = `<p>${text.replace(/\n/g, '<br>')}</p>`;
-                    } else {
-                        throw new Error("정보를 찾을 수 없습니다.");
-                    }
-                } catch (error) {
-                    console.error("Error getting info:", error);
-                    infoResult.innerHTML = `<p class="text-red-500">정보를 불러오는 중 오류가 발생했습니다.</p>`;
-                } finally {
-                    infoLoader.classList.add('hidden');
-                }
-            }
+          recognition.onspeechend = () => {
+              recognition.stop();
+              recordBtnText.textContent = '답변 듣기 시작';
+              sttStatus.textContent = '음성 인식이 완료되었습니다. 번역 중...';
+              recordReplyBtn.classList.replace('bg-gray-500', 'bg-red-600');
+              recordReplyBtn.classList.replace('hover:bg-gray-600', 'hover:bg-red-700');
+          };
 
-            async function handleGetFoodRecs(location) {
-                infoModalTitle.textContent = `✨ ${location} 주변 맛집`;
-                infoResult.innerHTML = '';
-                infoLoader.classList.remove('hidden');
-                openModal(infoModal, infoModalContent);
+          recognition.onend = () => {
+              if (recordBtnText.textContent !== '답변 듣기 시작') {
+                  recordBtnText.textContent = '답변 듣기 시작';
+                  recordReplyBtn.classList.replace('bg-gray-500', 'bg-red-600');
+                  recordReplyBtn.classList.replace('hover:bg-gray-600', 'hover:bg-red-700');
+              }
+          };
 
-                const systemPrompt = "You are a local food guide. Find 3 highly-rated restaurants near the specified location in Shanghai using Google Search. Provide the restaurant name, a brief 1-sentence description (e.g., 'Sichuan hotpot' or 'Famous xiao long bao'), and its address. Respond in Korean.";
-                const userQuery = `Find 3 restaurants near ${location} in Shanghai.`;
-                const payload = {
-                    contents: [{ parts: [{ text: userQuery }] }],
-                    tools: [{ "google_search": {} }],
-                    systemInstruction: { parts: [{ text: systemPrompt }] },
-                    generationConfig: {
-                        responseMimeType: "application/json",
-                        responseSchema: {
-                            type: "OBJECT",
-                            properties: {
-                                restaurants: {
-                                    type: "ARRAY",
-                                    items: {
-                                        type: "OBJECT",
-                                        properties: {
-                                            "name": { "type": "STRING" },
-                                            "description": { "type": "STRING" },
-                                            "address": { "type": "STRING" }
-                                        },
-                                        "required": ["name", "description", "address"]
-                                    }
-                                }
-                            }
-                        }
-                    }
-                };
+          recognition.onerror = (event) => {
+              let errorMessage = `음성 인식 오류: ${event.error}.`;
+              if (event.error === 'not-allowed') {
+                  errorMessage = '마이크 접근 권한이 차단되었습니다. 브라우저 설정을 확인해주세요.';
+              } else if (event.error === 'no-speech') {
+                  errorMessage = '음성이 감지되지 않았습니다. 다시 시도해주세요.';
+              }
+              sttStatus.textContent = errorMessage;
+              recordBtnText.textContent = '답변 듣기 시작';
+              recordReplyBtn.classList.replace('bg-gray-500', 'bg-red-600');
+              recordReplyBtn.classList.replace('hover:bg-gray-600', 'hover:bg-red-700');
+          };
 
-                try {
-                    const result = await fetchWithBackoff(textApiUrl, payload);
-                    const part = result.candidates?.[0]?.content?.parts?.[0];
-                    if (part && part.text) {
-                        const data = JSON.parse(part.text);
-                        if (data.restaurants && data.restaurants.length > 0) {
-                            infoResult.innerHTML = data.restaurants.map(r => `
-                                <div class="mb-4 p-3 border rounded-lg bg-gray-50">
-                                    <h4 class="font-semibold text-lg">${r.name}</h4>
-                                    <p class="text-gray-700">${r.description}</p>
-                                    <p class="text-sm text-gray-500 mt-1">
-                                        <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(r.name + ", " + r.address)}" target="_blank" class="text-blue-600 hover:underline">
-                                            ${r.address} (지도 보기)
-                                        </a>
-                                    </p>
-                                </div>
-                            `).join('');
-                        } else {
-                            throw new Error("추천 맛집을 찾지 못했습니다.");
-                        }
-                    } else {
-                        throw new Error("유효한 응답을 받지 못했습니다.");
-                    }
-                } catch (error) {
-                    console.error("Error getting food recommendations:", error);
-                    infoResult.innerHTML = `<p class="text-red-500">맛집 추천을 받는 중 오류가 발생했습니다: ${error.message}</p>`;
-                } finally {
-                    infoLoader.classList.add('hidden');
-                }
-            }
-            
-            // --- NEW: 기능 6: 전체 여행 일기 생성 ---
-            async function handleGenerateTripReview(button) {
-                infoModalTitle.textContent = '✨ 3박 4일 여행 일기';
-                infoResult.innerHTML = '';
-                infoLoader.classList.remove('hidden');
-                openModal(infoModal, infoModalContent);
+          async function handleTranslate(textToTranslate) {
+              translationResultWrapper.classList.remove('hidden');
+              translationResult.innerHTML = `<p class="text-gray-500">번역 중...</p>`;
+              
+              const systemPrompt = "You are an expert translator. Translate the given Chinese text to Korean.";
+              const userQuery = `Translate this to Korean: "${textToTranslate}"`;
+              
+              // !! 중요: 원본 Gemini 페이로드
+              const originalPayload = {
+                  contents: [{ parts: [{ text: userQuery }] }],
+                  systemInstruction: { parts: [{ text: systemPrompt }] }
+              };
 
-                const originalBtnHtml = button.innerHTML;
-                button.disabled = true;
-                button.innerHTML = `<span class="btn-spinner mr-2"></span> 생성 중...`;
+              try {
+                  // !! 중요: 호출 방식 변경
+                  const result = await fetchWithBackoff('text', originalPayload);
+                  const translatedText = result.candidates?.[0]?.content?.parts?.[0]?.text;
+                  
+                  if (translatedText) {
+                      translationResult.innerHTML = `<p class="text-lg font-semibold text-blue-700">${translatedText}</p>`;
+                  } else {
+                      throw new Error("유효한 번역을 받지 못했습니다.");
+                  }
+              } catch (error) {
+                  console.error("Error translating text:", error);
+                  translationResult.innerHTML = `<p class="text-red-500">번역 중 오류가 발생했습니다: ${error.message}</p>`;
+              }
+          }
 
-                const summaries = [];
-                document.querySelectorAll('.image-summary-btn').forEach(btn => {
-                    const day = btn.closest('section').querySelector('h2').textContent;
-                    summaries.push(`${day}: ${btn.dataset.daySummary}`);
-                });
-                const fullSummary = summaries.join('\n');
-
-                const systemPrompt = "You are a travel blogger. Write a fun, engaging travel diary blog post in Korean based on the following daily summaries. Write it in the first person (using '나' or '우리'). Make it sound like a personal reflection on the trip, highlighting the key experiences. Use paragraph breaks (\\n) for readability.";
-                const userQuery = `Here are my travel notes for the Shanghai trip:\n${fullSummary}\n\nWrite a friendly and personal blog post summarizing my trip.`;
-                
-                const payload = {
-                    contents: [{ parts: [{ text: userQuery }] }],
-                    systemInstruction: { parts: [{ text: systemPrompt }] }
-                };
-
-                try {
-                    const result = await fetchWithBackoff(textApiUrl, payload);
-                    const text = result.candidates?.[0]?.content?.parts?.[0]?.text;
-                    if (text) {
-                        infoResult.innerHTML = text.split('\n').map(p => `<p class="mb-4">${p}</p>`).join('');
-                    } else {
-                        throw new Error("일기 내용을 생성하지 못했습니다.");
-                    }
-                } catch (error)
- {
-                    console.error("Error generating trip review:", error);
-                    infoResult.innerHTML = `<p class="text-red-500">여행 일기 생성 중 오류가 발생했습니다: ${error.message}</p>`;
-                } finally {
-                    infoLoader.classList.add('hidden');
-                    button.disabled = false;
-                    button.innerHTML = originalBtnHtml;
-                }
-            }
+      } else if (recordReplyBtn) {
+          // (변경 없음)
+          recordReplyBtn.disabled = true;
+          sttStatus.textContent = '이 브라우저는 음성 인식을 지원하지 않습니다. Chrome 브라우저를 사용해 보세요.';
+          recordReplyBtn.classList.replace('bg-red-600', 'bg-gray-400');
+          recordReplyBtn.classList.replace('hover:bg-red-700', 'cursor-not-allowed');
+      }
 
 
-            // --- 기능 4: 이미지 요약 ---
-            const closeImageModalBtn = document.getElementById('closeImageModalBtn');
-            const imageLoader = document.getElementById('imageLoader');
-            const generatedImage = document.getElementById('generatedImage');
+      // --- 기능 2 & 3: 정보 / 맛집 추천 ---
+      const itineraryMain = document.getElementById('itinerary-main');
+      const infoModalTitle = document.getElementById('info-modal-title');
+      const infoResult = document.getElementById('infoResult');
+      const infoLoader = document.getElementById('infoLoader');
+      const closeInfoModalBtn = document.getElementById('closeInfoModalBtn');
 
-            if (closeImageModalBtn) closeImageModalBtn.addEventListener('click', () => closeModal(imageGenModal, imageModalContent));
-            if (imageGenModal) imageGenModal.addEventListener('click', (e) => {
-                if (e.target === imageGenModal) closeModal(imageGenModal, imageModalContent);
-            });
+      if (itineraryMain) itineraryMain.addEventListener('click', (e) => {
+          const infoBtn = e.target.closest('.learn-more-btn');
+          const foodBtn = e.target.closest('.food-recommend-btn');
+          const imageBtn = e.target.closest('.image-summary-btn');
+          const reviewBtn = e.target.closest('.generate-trip-review-btn'); 
+          
+          if (infoBtn) {
+              const location = infoBtn.dataset.location;
+              handleGetInfo(location);
+          }
+          if (foodBtn) {
+              const location = foodBtn.dataset.location;
+              handleGetFoodRecs(location);
+          }
+          if (imageBtn) {
+              const summary = imageBtn.dataset.daySummary;
+              handleGenerateImage(summary, imageBtn);
+          }
+          if (reviewBtn) { 
+              handleGenerateTripReview(reviewBtn);
+          }
+      });
 
-            async function handleGenerateImage(summary, button) {
-                generatedImage.classList.add('hidden');
-                imageLoader.classList.remove('hidden');
-                openModal(imageGenModal, imageModalContent);
-                button.disabled = true;
-                const originalBtnText = button.innerHTML;
-                button.innerHTML = `<span class="btn-spinner mr-2"></span> 생성 중...`;
+      if (closeInfoModalBtn) closeInfoModalBtn.addEventListener('click', () => closeModal(infoModal, infoModalContent));
+      if (infoModal) infoModal.addEventListener('click', (e) => {
+          if (e.target === infoModal) closeModal(infoModal, infoModalContent);
+      });
 
-                const systemPrompt = "You are a prompt engineer for an AI image generator. Create a single, evocative prompt based on the user's travel summary. The prompt should be in English, descriptive, and focus on creating a beautiful, artistic, digital art style illustration of the described scene. Focus on key visual elements, mood, and atmosphere. For example: 'A vibrant, digital art illustration of the Bund in Shanghai at night, dazzling neon skyscrapers of Pudong reflecting on the Huangpu River, classic European buildings, a cinematic atmosphere.'";
-                const userQuery = `Create an image prompt for this summary: ${summary}`;
-                
-                let imagePrompt = '';
-                try {
-                    // 1. 프롬프트 생성
-                    const promptPayload = {
-                        contents: [{ parts: [{ text: userQuery }] }],
-                        systemInstruction: { parts: [{ text: systemPrompt }] }
-                    };
-                    const promptResult = await fetchWithBackoff(textApiUrl, promptPayload);
-                    imagePrompt = promptResult.candidates?.[0]?.content?.parts?.[0]?.text;
-                    
-                    if (!imagePrompt) throw new Error("이미지 프롬프트를 생성하지 못했습니다.");
+      async function handleGetInfo(location) {
+          infoModalTitle.textContent = `✨ ${location} 알아보기`;
+          infoResult.innerHTML = '';
+          infoLoader.classList.remove('hidden');
+          openModal(infoModal, infoModalContent);
 
-                    // 2. 이미지 생성
-                    const imagePayload = { 
-                        instances: { prompt: imagePrompt }, 
-                        parameters: { "sampleCount": 1 } 
-                    };
-                    const imageResult = await fetchWithBackoff(imageApiUrl, imagePayload);
-                    
-                    const base64Data = imageResult.predictions?.[0]?.bytesBase64Encoded;
-                    if (base64Data) {
-                        generatedImage.src = `data:image/png;base64,${base64Data}`;
-                        generatedImage.classList.remove('hidden');
-                    } else {
-                        throw new Error("이미지 데이터를 받지 못했습니다.");
-                    }
-                } catch (error) {
-                    console.error("Error generating image:", error);
-                    generatedImage.src = '';
-                    generatedImage.alt = "이미지 생성에 실패했습니다.";
-                    generatedImage.classList.remove('hidden');
-                } finally {
-                    imageLoader.classList.add('hidden');
-                    button.disabled = false;
-                    button.innerHTML = originalBtnText;
-                }
-            }
+          const systemPrompt = "You are a tour guide. Provide a brief, interesting fact or history about the following location in Korean. Keep it concise and easy to read (2-3 sentences).";
+          const userQuery = `Tell me an interesting fact about ${location} in Shanghai.`;
+          
+          // !! 중요: 원본 Gemini 페이로드
+          const originalPayload = {
+              contents: [{ parts: [{ text: userQuery }] }],
+              systemInstruction: { parts: [{ text: systemPrompt }] }
+          };
+
+          try {
+              // !! 중요: 호출 방식 변경
+              const result = await fetchWithBackoff('text', originalPayload);
+              const text = result.candidates?.[0]?.content?.parts?.[0]?.text;
+              if (text) {
+                  infoResult.innerHTML = `<p>${text.replace(/\n/g, '<br>')}</p>`;
+              } else {
+                  throw new Error("정보를 찾을 수 없습니다.");
+              }
+          } catch (error) {
+              console.error("Error getting info:", error);
+              infoResult.innerHTML = `<p class="text-red-500">정보를 불러오는 중 오류가 발생했습니다.</p>`;
+          } finally {
+              infoLoader.classList.add('hidden');
+          }
+      }
+
+      async function handleGetFoodRecs(location) {
+          infoModalTitle.textContent = `✨ ${location} 주변 맛집`;
+          infoResult.innerHTML = '';
+          infoLoader.classList.remove('hidden');
+          openModal(infoModal, infoModalContent);
+
+          const systemPrompt = "You are a local food guide. Find 3 highly-rated restaurants near the specified location in Shanghai using Google Search. Provide the restaurant name, a brief 1-sentence description (e.g., 'Sichuan hotpot' or 'Famous xiao long bao'), and its address. Respond in Korean.";
+          const userQuery = `Find 3 restaurants near ${location} in Shanghai.`;
+          
+          // !! 중요: 원본 Gemini 페이로드 (Google Search 포함)
+          const originalPayload = {
+              contents: [{ parts: [{ text: userQuery }] }],
+              tools: [{ "google_search": {} }],
+              systemInstruction: { parts: [{ text: systemPrompt }] },
+              generationConfig: {
+                  responseMimeType: "application/json",
+                  responseSchema: {
+                      type: "OBJECT",
+                      properties: {
+                          restaurants: {
+                              type: "ARRAY",
+                              items: {
+                                  type: "OBJECT",
+                                  properties: {
+                                      "name": { "type": "STRING" },
+                                      "description": { "type": "STRING" },
+                                      "address": { "type": "STRING" }
+                                  },
+                                  "required": ["name", "description", "address"]
+                              }
+                          }
+                      }
+                  }
+              }
+          };
+
+          try {
+              // !! 중요: 호출 방식 변경
+              const result = await fetchWithBackoff('text', originalPayload);
+              const part = result.candidates?.[0]?.content?.parts?.[0];
+              if (part && part.text) {
+                  const data = JSON.parse(part.text);
+                  if (data.restaurants && data.restaurants.length > 0) {
+                      infoResult.innerHTML = data.restaurants.map(r => `
+                          <div class="mb-4 p-3 border rounded-lg bg-gray-50">
+                              <h4 class="font-semibold text-lg">${r.name}</h4>
+                              <p class="text-gray-700">${r.description}</p>
+                              <p class="text-sm text-gray-500 mt-1">
+                                  <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(r.name + ", " + r.address)}" target="_blank" class="text-blue-600 hover:underline">
+                                      ${r.address} (지도 보기)
+                                  </a>
+                              </p>
+                          </div>
+                      `).join('');
+                  } else {
+                      throw new Error("추천 맛집을 찾지 못했습니다.");
+                  }
+              } else {
+                  throw new Error("유효한 응답을 받지 못했습니다.");
+              }
+          } catch (error) {
+              console.error("Error getting food recommendations:", error);
+              infoResult.innerHTML = `<p class="text-red-500">맛집 추천을 받는 중 오류가 발생했습니다: ${error.message}</p>`;
+          } finally {
+              infoLoader.classList.add('hidden');
+          }
+      }
+
+      // --- 기능 6: 전체 여행 일기 생성 ---
+      async function handleGenerateTripReview(button) {
+          infoModalTitle.textContent = '✨ 3박 4일 여행 일기';
+          infoResult.innerHTML = '';
+          infoLoader.classList.remove('hidden');
+          openModal(infoModal, infoModalContent);
+
+          const originalBtnHtml = button.innerHTML;
+          button.disabled = true;
+          button.innerHTML = `<span class="btn-spinner mr-2"></span> 생성 중...`;
+
+          const summaries = [];
+          document.querySelectorAll('.image-summary-btn').forEach(btn => {
+              const day = btn.closest('section').querySelector('h2').textContent;
+              summaries.push(`${day}: ${btn.dataset.daySummary}`);
+          });
+          const fullSummary = summaries.join('\n');
+
+          const systemPrompt = "You are a travel blogger. Write a fun, engaging travel diary blog post in Korean based on the following daily summaries. Write it in the first person (using '나' or '우리'). Make it sound like a personal reflection on the trip, highlighting the key experiences. Use paragraph breaks (\\n) for readability.";
+          const userQuery = `Here are my travel notes for the Shanghai trip:\n${fullSummary}\n\nWrite a friendly and personal blog post summarizing my trip.`;
+          
+          // !! 중요: 원본 Gemini 페이로드
+          const originalPayload = {
+              contents: [{ parts: [{ text: userQuery }] }],
+              systemInstruction: { parts: [{ text: systemPrompt }] }
+          };
+
+          try {
+              // !! 중요: 호출 방식 변경
+              const result = await fetchWithBackoff('text', originalPayload);
+              const text = result.candidates?.[0]?.content?.parts?.[0]?.text;
+              if (text) {
+                  infoResult.innerHTML = text.split('\n').map(p => `<p class="mb-4">${p}</p>`).join('');
+              } else {
+                  throw new Error("일기 내용을 생성하지 못했습니다.");
+              }
+          } catch (error) {
+              console.error("Error generating trip review:", error);
+              infoResult.innerHTML = `<p class="text-red-500">여행 일기 생성 중 오류가 발생했습니다: ${error.message}</p>`;
+          } finally {
+              infoLoader.classList.add('hidden');
+              button.disabled = false;
+              button.innerHTML = originalBtnHtml;
+          }
+      }
+      
+      // --- 기능 4: 이미지 요약 ---
+      const closeImageModalBtn = document.getElementById('closeImageModalBtn');
+      const imageLoader = document.getElementById('imageLoader');
+      const generatedImage = document.getElementById('generatedImage');
+
+      if (closeImageModalBtn) closeImageModalBtn.addEventListener('click', () => closeModal(imageGenModal, imageModalContent));
+      if (imageGenModal) imageGenModal.addEventListener('click', (e) => {
+          if (e.target === imageGenModal) closeModal(imageGenModal, imageModalContent);
+      });
+
+      async function handleGenerateImage(summary, button) {
+          generatedImage.classList.add('hidden');
+          imageLoader.classList.remove('hidden');
+          openModal(imageGenModal, imageModalContent);
+          button.disabled = true;
+          const originalBtnText = button.innerHTML;
+          button.innerHTML = `<span class="btn-spinner mr-2"></span> 생성 중...`;
+
+          // 1. 프롬프트 생성 (이것은 여전히 'text' API를 사용)
+          const systemPrompt = "You are a prompt engineer for an AI image generator. Create a single, evocative prompt based on the user's travel summary. The prompt should be in English, descriptive, and focus on creating a beautiful, artistic, digital art style illustration of the described scene. Focus on key visual elements, mood, and atmosphere. For example: 'A vibrant, digital art illustration of the Bund in Shanghai at night, dazzling neon skyscrapers of Pudong reflecting on the Huangpu River, classic European buildings, a cinematic atmosphere.'";
+          const userQuery = `Create an image prompt for this summary: ${summary}`;
+          
+          let imagePrompt = '';
+          try {
+              const promptPayload = {
+                  contents: [{ parts: [{ text: userQuery }] }],
+                  systemInstruction: { parts: [{ text: systemPrompt }] }
+              };
+              // !! 중요: 호출 방식 변경 (프롬프트 생성)
+              const promptResult = await fetchWithBackoff('text', promptPayload);
+              imagePrompt = promptResult.candidates?.[0]?.content?.parts?.[0]?.text;
+              
+              if (!imagePrompt) throw new Error("이미지 프롬프트를 생성하지 못했습니다.");
+
+              // 2. 이미지 생성
+              // !! 중요: 원본 Imagen 페이로드
+              const imagePayload = { 
+                  instances: { prompt: imagePrompt }, 
+                  parameters: { "sampleCount": 1 } 
+              };
+              
+              // !! 중요: 호출 방식 변경 ('image' 유형)
+              const imageResult = await fetchWithBackoff('image', imagePayload);
+              
+              const base64Data = imageResult.predictions?.[0]?.bytesBase64Encoded;
+              if (base64Data) {
+                  generatedImage.src = `data:image/png;base64,${base64Data}`;
+                  generatedImage.classList.remove('hidden');
+              } else {
+                  throw new Error("이미지 데이터를 받지 못했습니다.");
+              }
+          } catch (error) {
+              console.error("Error generating image:", error);
+              generatedImage.src = '';
+              generatedImage.alt = "이미지 생성에 실패했습니다.";
+              generatedImage.classList.remove('hidden');
+          } finally {
+              imageLoader.classList.add('hidden');
+              button.disabled = false;
+              button.innerHTML = originalBtnText;
+          }
+      }
 
 
-            // --- 오디오 헬퍼 (TTS) ---
-            function base64ToArrayBuffer(base64) {
-                const binaryString = window.atob(base64);
-                const len = binaryString.length;
-                const bytes = new Uint8Array(len);
-                for (let i = 0; i < len; i++) {
-                    bytes[i] = binaryString.charCodeAt(i);
-                }
-                return bytes.buffer;
-            }
+      // --- 오디오 헬퍼 (TTS) ---
+      // (이 코드는 변경 없음)
+      function base64ToArrayBuffer(base64) {
+          const binaryString = window.atob(base64);
+          const len = binaryString.length;
+          const bytes = new Uint8Array(len);
+          for (let i = 0; i < len; i++) {
+              bytes[i] = binaryString.charCodeAt(i);
+          }
+          return bytes.buffer;
+      }
 
-            function pcmToWav(pcmData, sampleRate) {
-                const headerLength = 44;
-                const dataLength = pcmData.length * pcmData.BYTES_PER_ELEMENT;
-                const buffer = new ArrayBuffer(headerLength + dataLength);
-                const view = new DataView(buffer);
-                const channels = 1; // 1 channel (mono)
-                const bitsPerSample = 16; // 16 bits
-                const byteRate = sampleRate * channels * (bitsPerSample / 8);
-                const blockAlign = channels * (bitsPerSample / 8);
+      function pcmToWav(pcmData, sampleRate) {
+          const headerLength = 44;
+          const dataLength = pcmData.length * pcmData.BYTES_PER_ELEMENT;
+          const buffer = new ArrayBuffer(headerLength + dataLength);
+          const view = new DataView(buffer);
+          const channels = 1; // 1 channel (mono)
+          const bitsPerSample = 16; // 16 bits
+          const byteRate = sampleRate * channels * (bitsPerSample / 8);
+          const blockAlign = channels * (bitsPerSample / 8);
 
-                // RIFF 
-                writeString(view, 0, 'RIFF');
-                view.setUint32(4, 36 + dataLength, true); // file size - 8
-                writeString(view, 8, 'WAVE');
-                
-                // fmt 
-                writeString(view, 12, 'fmt ');
-                view.setUint32(16, 16, true); // chunk size
-                view.setUint16(20, 1, true); // audio format 1 = PCM
-                view.setUint16(22, channels, true);
-                view.setUint32(24, sampleRate, true);
-                view.setUint32(28, byteRate, true);
-                view.setUint16(32, blockAlign, true);
-                view.setUint16(34, bitsPerSample, true);
-                
-                // data
-                writeString(view, 36, 'data');
-                view.setUint32(40, dataLength, true);
+          // RIFF 
+          writeString(view, 0, 'RIFF');
+          view.setUint32(4, 36 + dataLength, true); // file size - 8
+          writeString(view, 8, 'WAVE');
+          
+          // fmt 
+          writeString(view, 12, 'fmt ');
+          view.setUint32(16, 16, true); // chunk size
+          view.setUint16(20, 1, true); // audio format 1 = PCM
+          view.setUint16(22, channels, true);
+          view.setUint32(24, sampleRate, true);
+          view.setUint32(28, byteRate, true);
+          view.setUint16(32, blockAlign, true);
+          view.setUint16(34, bitsPerSample, true);
+          
+          // data
+          writeString(view, 36, 'data');
+          view.setUint32(40, dataLength, true);
 
-                // PCM data
-                let offset = headerLength;
-                for (let i = 0; i < pcmData.length; i++, offset += 2) {
-                    view.setInt16(offset, pcmData[i], true);
-                }
-                return new Blob([view], { type: 'audio/wav' });
-            }
+          // PCM data
+          let offset = headerLength;
+          for (let i = 0; i < pcmData.length; i++, offset += 2) {
+              view.setInt16(offset, pcmData[i], true);
+          }
+          return new Blob([view], { type: 'audio/wav' });
+      }
 
-            function writeString(view, offset, string) {
-                for (let i = 0; i < string.length; i++) {
-                    view.setUint8(offset + i, string.charCodeAt(i));
-                }
-            }
-        });
-    </script>
+      function writeString(view, offset, string) {
+          for (let i = 0; i < string.length; i++) {
+              view.setUint8(offset + i, string.charCodeAt(i));
+          }
+      }
+  });
+</script>
+
+
 
 </body>
 </html>
