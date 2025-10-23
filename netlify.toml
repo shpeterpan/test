@@ -1,0 +1,8 @@
+[build]
+  # 1. Netlify가 배포할 기본 폴더를 루트(".")로 지정합니다.
+  #    (Netlify가 /index.html 파일을 메인 페이지로 사용합니다)
+  publish = "."
+  
+  # 2. Netlify가 서버 함수(API 키 숨기는 코드)를 찾을 폴더를 '/functions'로 지정합니다.
+  functions = "functions"
+
