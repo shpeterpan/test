@@ -1,0 +1,1752 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>상하이 3박 4일 여행 일정</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts (Inter for English, Noto Sans KR for Korean) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            /* Noto Sans KR을 Inter보다 먼저 지정하여 한글 우선 적용 */
+            font-family: 'Noto Sans KR', 'Inter', sans-serif;
+        }
+        /* 로딩 스피너 스타일 */
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        .loading-spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-left-color: #3b82f6; /* blue-500 */
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+        /* 버튼 로딩 스피너 */
+        .btn-spinner {
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-left-color: #ffffff;
+            border-radius: 50%;
+            width: 16px;
+            height: 16px;
+            animation: spin 0.8s linear infinite;
+        }
+        /* '더 알아보기' 버튼 스타일 */
+        .learn-more-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem; /* 1 */
+            padding: 0.25rem 0.5rem; /* py-1 px-2 */
+            font-size: 0.875rem; /* text-sm */
+            font-weight: 500; /* medium */
+            color: #2563eb; /* text-blue-600 */
+            background-color: #dbeafe; /* bg-blue-50 */
+            border-radius: 0.375rem; /* rounded-md */
+            transition: all 0.2s;
+        }
+        .learn-more-btn:hover {
+            background-color: #bfdbfe; /* hover:bg-blue-100 */
+            color: #1d4ed8; /* hover:text-blue-700 */
+        }
+        /* '맛집 추천' 버튼 스타일 */
+        .food-recommend-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem; /* 2 */
+            padding: 0.5rem 0.75rem; /* py-2 px-3 */
+            font-size: 0.875rem; /* text-sm */
+            font-weight: 600; /* semibold */
+            color: #1e3a8a; /* text-blue-900 */
+            background-color: #93c5fd; /* bg-blue-300 */
+            border-radius: 0.375rem; /* rounded-md */
+            transition: all 0.2s;
+        }
+        .food-recommend-btn:hover {
+            background-color: #60a5fa; /* hover:bg-blue-400 */
+        }
+        /* '이미지 요약' 버튼 스타일 */
+        .image-summary-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            font-size: 1rem; /* text-base */
+            font-weight: 600; /* semibold */
+            color: #ffffff; /* text-white */
+            background-color: #7c3aed; /* bg-purple-600 */
+            border-radius: 0.5rem; /* rounded-lg */
+            transition: all 0.2s;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        .image-summary-btn:hover {
+            background-color: #6d28d9; /* hover:bg-purple-700 */
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+
+    <!-- Main Container -->
+    <div class="max-w-4xl mx-auto bg-white min-h-screen shadow-lg">
+        
+        <!-- Header -->
+        <header class="p-6 md:p-8 bg-gradient-to-r from-blue-700 to-indigo-800 text-white rounded-b-lg shadow-md sticky top-0 z-10">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center">
+                <div>
+                    <h1 class="text-3xl md:text-4xl font-bold">상하이 3박 4일 여행 일정</h1>
+                    <p class="text-lg md:text-xl text-indigo-100 mt-1">10/25 (토) - 10/28 (화)</p>
+                </div>
+                <!-- ✨ Gemini API 기능 버튼 추가 -->
+                <button id="openPhraseModalBtn" class="mt-4 md:mt-0 flex-shrink-0 inline-flex items-center gap-2 px-4 py-2 bg-yellow-400 text-yellow-900 font-semibold rounded-lg shadow-md hover:bg-yellow-300 transition-all duration-200">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-5a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0v-1.5A.75.75 0 0110 5zm0 10a1 1 0 100-2 1 1 0 000 2zm-1.25-6.5a.75.75 0 00-1.5 0v4a.75.75 0 001.5 0v-4zm2.5 0a.75.75 0 00-1.5 0v4a.75.75 0 001.5 0v-4z" clip-rule="evenodd" /></svg>
+                    ✨ 여행 회화 도우미
+                </button>
+            </div>
+        </header>
+
+        <!-- Itinerary Body -->
+        <main class="p-6 md:p-8" id="itinerary-main">
+
+            <!-- Day 1: 10/25 (토) -->
+            <section class="mb-12">
+                <h2 class="text-2xl font-bold text-indigo-800 border-b-2 border-indigo-100 pb-2 mb-8">1일차 (10/25)</h2>
+                <div class="flow-root">
+                    <ul class="-mb-8">
+                        
+                        <!-- Timeline Item: 공항 리무진 -->
+                        <li>
+                            <div class="relative pb-8">
+                                <span class="absolute top-5 left-5 -ml-px h-full w-0.5 bg-gray-200" aria-hidden="true"></span>
+                                <div class="relative flex items-start space-x-3">
+                                    <!-- Icon -->
+                                    <div>
+                                        <div class="relative px-1">
+                                            <div class="h-10 w-10 bg-blue-100 rounded-full ring-8 ring-white flex items-center justify-center">
+                                                <svg class="h-6 w-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 18.75a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 01-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h1.125c.621 0 1.125-.504 1.125-1.125V14.25m-17.25 4.5h1.125c.621 0 1.125-.504 1.125-1.125V14.25m0 0V4.875c0-.621.504-1.125 1.125-1.125h13.5c.621 0 1.125.504 1.125 1.125V14.25" /></svg>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Content -->
+                                    <div class="min-w-0 flex-1 py-1.5">
+                                        <div class="text-sm text-gray-500">
+                                            <span class="font-medium text-gray-900">07:45 / 08:10</span>
+                                        </div>
+                                        <div class="mt-1">
+                                            <h3 class="text-lg font-semibold text-gray-800">
+                                                <a href="https://www.google.com/maps/search/?api=1&query=GMP+김포국제공항" target="_blank" class="text-blue-600 hover:text-blue-800 hover:underline">
+                                                    GMP 김포국제공항 출발
+                                                </a>
+                                            </h3>
+                                            <p class="text-sm text-gray-600">상하이항공 FM3066 | 일반석 N | 에어버스 A330</p>
+                                            <p class="text-sm text-gray-600">(실제 운항사: 중국동방항공 MU512)</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+
+                        <!-- Timeline Item: 상하이 도착 및 호텔 -->
+                        <li>
+                            <div class="relative pb-8">
+                                <span class="absolute top-5 left-5 -ml-px h-full w-0.5 bg-gray-200" aria-hidden="true"></span>
+                                <div class="relative flex items-start space-x-3">
+                                    <!-- Icon -->
+                                    <div>
+                                        <div class="relative px-1">
+                                            <div class="h-10 w-10 bg-green-100 rounded-full ring-8 ring-white flex items-center justify-center">
+                                                <svg class="h-6 w-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" /></svg>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Content -->
+                                    <div class="min-w-0 flex-1 py-1.5">
+                                        <div class="text-sm text-gray-500">
+                                            <span class="font-medium text-gray-900">13:00 / 14:00</span>
+                                        </div>
+                                        <div class="mt-1">
+                                            <h3 class="text-lg font-semibold text-gray-800">
+                                                <a href="https://www.google.com/maps/search/?api=1&query=SHA+홍차오+국제공항+T1+上海虹桥国际机场" target="_blank" class="text-blue-600 hover:text-blue-800 hover:underline">
+                                                    SHA 홍차오 국제공항 T1 도착
+                                                </a>
+                                            </h3>
+                                            <p class="text-sm text-gray-600 mt-1">
+                                                <a href="https://www.google.com/maps/search/?api=1&query=Conrad+Shanghai+上海康莱德酒店" target="_blank" class="text-blue-600 hover:text-blue-800 hover:underline">
+                                                    Conrad Shanghai (上海康莱德酒店)
+                                                </a> 이동 및 체크인
+                                            </p>
+                                            <p class="text-sm text-gray-500 mt-1">
+                                                * 홍차오 공항은 시내와 가까워 지하철(10호선) 또는 택시로 이동하기 편리합니다.
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+
+                        <!-- Timeline Item: 늦은 점심 -->
+                        <li>
+                            <div class="relative pb-8">
+                                <span class="absolute top-5 left-5 -ml-px h-full w-0.5 bg-gray-200" aria-hidden="true"></span>
+                                <div class="relative flex items-start space-x-3">
+                                    <!-- Icon -->
+                                    <div>
+                                        <div class="relative px-1">
+                                            <div class="h-10 w-10 bg-orange-100 rounded-full ring-8 ring-white flex items-center justify-center">
+                                                <svg class="h-6 w-6 text-orange-600" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9 5.25h.008v.008H12v-.008z" /></svg>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Content -->
+                                    <div class="min-w-0 flex-1 py-1.5">
+                                        <div class="text-sm text-gray-500">
+                                            <span class="font-medium text-gray-900">15:30~</span>
+                                        </div>
+                                        <div class="mt-1">
+                                            <h3 class="text-lg font-semibold text-gray-800">
+                                                늦은 점심: <a href="https://www.google.com/maps/search/?api=1&query=人和馆(肇嘉浜路店)" target="_blank" class="text-blue-600 hover:text-blue-800 hover:underline">
+                                                    人和馆 (런허관)
+                                                </a>
+                                            </h3>
+                                            <p class="text-sm text-gray-600">人和馆(肇嘉浜路店) - 상하이 요리</p>
+                                            <div class="mt-2 p-3 bg-gray-50 rounded-md text-sm">
+                                                <p><strong>특징:</strong> 1930년대 상하이를 재현한 인테리어, 현지인 맛집.</p>
+                                                <p><strong>대표:</strong> 홍샤오로우(红烧肉), 훈제 생선(熏鱼)</p>
+                                                <p><strong>가격:</strong> 150-250위안/인</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+
+                        <!-- Timeline Item: 와이탄 산책 -->
+                        <li>
+                            <div class="relative pb-8">
+                                <span class="absolute top-5 left-5 -ml-px h-full w-0.5 bg-gray-200" aria-hidden="true"></span>
+                                <div class="relative flex items-start space-x-3">
+                                    <!-- Icon -->
+                                    <div>
+                                        <div class="relative px-1">
+                                            <div class="h-10 w-10 bg-pink-100 rounded-full ring-8 ring-white flex items-center justify-center">
+                                                <svg class="h-6 w-6 text-pink-600" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" /></svg>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Content -->
+                                    <div class="min-w-0 flex-1 py-1.5">
+                                        <div class="text-sm text-gray-500">
+                                            <span class="font-medium text-gray-900">17:00~</span>
+                                        </div>
+                                        <div class="mt-1">
+                                            <h3 class="text-lg font-semibold text-gray-800">
+                                                <a href="https://www.google.com/maps/search/?api=1&query=난징동루+南京东路" target="_blank" class="text-blue-600 hover:text-blue-800 hover:underline">
+                                                    난징동루
+                                                </a> -> <a href="https://www.google.com/maps/search/?api=1&query=와이탄+外滩" target="_blank" class="text-blue-600 hover:text-blue-800 hover:underline">
+                                                    와이탄
+                                                </a> 산책
+                                            </h3>
+                                            <p class="text-sm text-gray-600">南京东路 -> 外滩</p>
+                                            <div class="mt-2 p-3 bg-gray-50 rounded-md text-sm">
+                                                <p>난징동루: 상하이 최대 쇼핑 거리.</p>
+                                                <p>와이탄: 상하이의 상징. 푸동의 화려한 야경 감상.</p>
+                                                <p><strong>추천:</strong> 와이탄에서 인생샷, 헤이티(喜茶) 음료.</p>
+                                                <!-- "더 알아보기" 버튼 추가 -->
+                                                <button class="learn-more-btn mt-2" data-query-type="info" data-location="와이탄 (外滩)">✨ 더 알아보기</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        
+                        <!-- Timeline Item: 저녁 식사 -->
+                        <li>
+                            <div class="relative pb-8">
+                                <span class="absolute top-5 left-5 -ml-px h-full w-0.5 bg-gray-200" aria-hidden="true"></span>
+                                <div class="relative flex items-start space-x-3">
+                                    <!-- Icon -->
+                                    <div>
+                                        <div class="relative px-1">
+                                            <div class="h-10 w-10 bg-orange-100 rounded-full ring-8 ring-white flex items-center justify-center">
+                                                <svg class="h-6 w-6 text-orange-600" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.362 5.214A8.252 8.252 0 0112 21 8.25 8.25 0 016.038 7.048 8.287 8.287 0 009 9.6a8.983 8.983 0 013.362-3.797z" /><path stroke-linecap="round" stroke-linejoin="round" d="M15.362 5.214A8.252 8.252 0 0112 21 8.25 8.25 0 016.038 7.048 8.287 8.287 0 009 9.6a8.983 8.983 0 013.362-3.797zM15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Content -->
+                                    <div class="min-w-0 flex-1 py-1.5">
+                                        <div class="text-sm text-gray-500">
+                                            <span class="font-medium text-gray-900">19:00~</span>
+                                        </div>
+                                        <div class="mt-1">
+                                            <h3 class="text-lg font-semibold text-gray-800">
+                                                저녁 식사: <a href="https://www.google.com/maps/search/?api=1&query=山缓缓火锅+신천지" target="_blank" class="text-blue-600 hover:text-blue-800 hover:underline">
+                                                    샨 환환 훠거
+                                                </a>
+                                            </h3>
+                                            <p class="text-sm text-gray-600">신천지 山缓缓火锅</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+
+                        <!-- Timeline Item: 야경 감상 -->
+                        <li>
+                            <div class="relative pb-8">
+                                <!-- <span class="absolute top-5 left-5 -ml-px h-full w-0.5 bg-gray-200" aria-hidden="true"></span> -->
+                                <div class="relative flex items-start space-x-3">
+                                    <!-- Icon -->
+                                    <div>
+                                        <div class="relative px-1">
+                                            <div class="h-10 w-10 bg-purple-100 rounded-full ring-8 ring-white flex items-center justify-center">
+                                                <svg class="h-6 w-6 text-purple-600" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456zM18 12.75l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 18l-1.035.259a3.375 3.375 0 00-2.456 2.456L18 21.75l-.259-1.035a3.375 3.375 0 00-2.456-2.456L14.25 18l1.035-.259a3.375 3.375 0 002.456-2.456L18 12.75z" /></svg>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Content -->
+                                    <div class="min-w-0 flex-1 py-1.5">
+                                        <div class="text-sm text-gray-500">
+                                            <span class="font-medium text-gray-900">21:00~</span>
+                                        </div>
+                                        <div class="mt-1">
+                                            <h3 class="text-lg font-semibold text-gray-800">
+                                                야경 감상: <a href="https://www.google.com/maps/search/?api=1&query=Shanghai+Tower+上海中心大厦" target="_blank" class="text-blue-600 hover:text-blue-800 hover:underline">
+                                                    Shanghai Tower
+                                                </a>
+                                            </h3>
+                                            <p class="text-sm text-gray-600">上海中心大厦 (또는 루프탑 바)</p>
+                                            <div class="mt-2 p-3 bg-gray-50 rounded-md text-sm">
+                                                <p><strong>특징:</strong> 중국 최고층 빌딩 전망대에서 보는 압도적인 야경</p>
+                                                <!-- "더 알아보기" 버튼 추가 -->
+                                                <button class="learn-more-btn mt-2" data-query-type="info" data-location="상하이 타워 (上海中心大厦)">✨ 더 알아보기</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <!-- NEW: 이미지 요약 버튼 -->
+                <div class="mt-10 text-center">
+                    <button class="image-summary-btn" data-day-summary="Shanghai arrival, checking into Conrad, classic Shanghai food at Renheguan, walking The Bund and Nanjing Road at night, Shanghai Tower night view.">
+                        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l-1.586-1.586a2 2 0 00-2.828 0L6 14m6-6l.207.207a2 2 0 002.828 0L18 8m-6 6l2 2m-2-2l-2-2m2 2l-2 2m-2-2l2-2" /></svg>
+                        ✨ 이 날을 이미지로 요약하기
+                    </button>
+                </div>
+            </section>
+            
+            <!-- Day 2: 10/26 (일) -->
+            <section class="mb-12">
+                <h2 class="text-2xl font-bold text-indigo-800 border-b-2 border-indigo-100 pb-2 mb-8">2일차 (10/26)</h2>
+                <div class="flow-root">
+                    <ul class="-mb-8">
+                        
+                        <!-- Timeline Item: 아침 식사 -->
+                        <li>
+                            <div class="relative pb-8">
+                                <span class="absolute top-5 left-5 -ml-px h-full w-0.5 bg-gray-200" aria-hidden="true"></span>
+                                <div class="relative flex items-start space-x-3">
+                                    <!-- Icon -->
+                                    <div>
+                                        <div class="relative px-1">
+                                            <div class="h-10 w-10 bg-orange-100 rounded-full ring-8 ring-white flex items-center justify-center">
+                                                <svg class="h-6 w-6 text-orange-600" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9 5.25h.008v.008H12v-.008z" /></svg>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Content -->
+                                    <div class="min-w-0 flex-1 py-1.5">
+                                        <div class="text-sm text-gray-500">
+                                            <span class="font-medium text-gray-900">09:00~</span>
+                                        </div>
+                                        <div class="mt-1">
+                                            <h3 class="text-lg font-semibold text-gray-800">
+                                                아침 식사: <a href="https://www.google.com/maps/search/?api=1&query=大壶春(四川中路店)" target="_blank" class="text-blue-600 hover:text-blue-800 hover:underline">
+                                                    Dahuchun (대호춘)
+                                                </a>
+                                            </h3>
+                                            <p class="text-sm text-gray-600">大壶春(四川中路店) - 빕 구루망</p>
+                                            <div class="mt-2 p-3 bg-gray-50 rounded-md text-sm">
+                                                <p><strong>특징:</strong> 상하이식 군만두 '셩젠' 노포.</p>
+                                                <p><strong>대표:</strong> 셩젠, 카레 소고기 탕</p>
+                                                <p><strong>가격:</strong> 30-50위안/인</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+
+                        <!-- Timeline Item: 임시정부 -->
+                        <li>
+                            <div class="relative pb-8">
+                                <span class="absolute top-5 left-5 -ml-px h-full w-0.5 bg-gray-200" aria-hidden="true"></span>
+                                <div class="relative flex items-start space-x-3">
+                                    <!-- Icon -->
+                                    <div>
+                                        <div class="relative px-1">
+                                            <div class="h-10 w-10 bg-teal-100 rounded-full ring-8 ring-white flex items-center justify-center">
+                                                <svg class="h-6 w-6 text-teal-600" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M10.125 2.25h-4.5c-1.125 0-2.25.9-2.25 2.25v15c0 1.125.9 2.25 2.25 2.25h13.5c1.125 0 2.25-.9 2.25-2.25v-15c0-1.125-.9-2.25-2.25-2.25h-4.5m-7.5 0l.071 0.071c.071.071.071.184 0 .254l-0.071.071M10.125 2.25l.071 0.071c.071.071.071.184 0 .254l-0.071.071M10.125 2.25l.071 0.071c.071.071.071.184 0 .254l-0.071.071m5.625 2.25l.071.071c.071.071.071.184 0 .254l-0.071.071M15.75 4.5l.071.071c.071.071.071.184 0 .254l-0.071.071M15.75 4.5l.071.071c.071.071.071.184 0 .254l-0.071.071M15.75 4.5l.071.071c.071.071.071.184 0 .254l-0.071.071M4.5 9h15m-15 3h15m-15 3h15m-15 3h15" /></svg>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Content -->
+                                    <div class="min-w-0 flex-1 py-1.5">
+                                        <div class="text-sm text-gray-500">
+                                            <span class="font-medium text-gray-900">10:30~</span>
+                                        </div>
+                                        <div class="mt-1">
+                                            <h3 class="text-lg font-semibold text-gray-800">
+                                                <a href="https://www.google.com/maps/search/?api=1&query=대한민국+임시정부+유적지+大韩民国临时政府旧址" target="_blank" class="text-blue-600 hover:text-blue-800 hover:underline">
+                                                    대한민국 임시정부 유적지 방문
+                                                </a>
+                                            </h3>
+                                            <p class="text-sm text-gray-600">大韩民国临时政府旧址</p>
+                                            <div class="mt-2 p-3 bg-gray-50 rounded-md text-sm">
+                                                <button class="learn-more-btn" data-query-type="info" data-location="대한민국 임시정부 유적지 (大韩民国临时政府旧址)">✨ 더 알아보기</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+
+                        <!-- Timeline Item: 신천지 -->
+                        <li>
+                            <div class="relative pb-8">
+                                <span class="absolute top-5 left-5 -ml-px h-full w-0.5 bg-gray-200" aria-hidden="true"></span>
+                                <div class="relative flex items-start space-x-3">
+                                    <!-- Icon -->
+                                    <div>
+                                        <div class="relative px-1">
+                                            <div class="h-10 w-10 bg-pink-100 rounded-full ring-8 ring-white flex items-center justify-center">
+                                                <svg class="h-6 w-6 text-pink-600" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" /></svg>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Content -->
+                                    <div class="min-w-0 flex-1 py-1.5">
+                                        <div class="text-sm text-gray-500">
+                                            <span class="font-medium text-gray-900">12:00~</span>
+                                        </div>
+                                        <div class="mt-1">
+                                            <h3 class="text-lg font-semibold text-gray-800">
+                                                <a href="https://www.google.com/maps/search/?api=1&query=신천지+新天地" target="_blank" class="text-blue-600 hover:text-blue-800 hover:underline">
+                                                    신천지 둘러보기
+                                                </a>
+                                            </h3>
+                                            <p class="text-sm text-gray-600">新天地</p>
+                                            <div class="mt-2 p-3 bg-gray-50 rounded-md text-sm">
+                                                <p><strong>특징:</strong> 전통가옥 '스쿠먼'을 개조한 세련되고 이국적인 거리.</p>
+                                                <!-- "더 알아보기" 버튼 추가 -->
+                                                <button class="learn-more-btn mt-2" data-query-type="info" data-location="상하이 신천지 (新天地)">✨ 더 알아보기</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+
+                        <!-- Timeline Item: 점심 식사 -->
+                        <li>
+                            <div class="relative pb-8">
+                                <span class="absolute top-5 left-5 -ml-px h-full w-0.5 bg-gray-200" aria-hidden="true"></span>
+                                <div class="relative flex items-start space-x-3">
+                                    <!-- Icon -->
+                                    <div>
+                                        <div class="relative px-1">
+                                            <div class="h-10 w-10 bg-orange-100 rounded-full ring-8 ring-white flex items-center justify-center">
+                                                <svg class="h-6 w-6 text-orange-600" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9 5.25h.008v.008H12v-.008z" /></svg>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Content -->
+                                    <div class="min-w-0 flex-1 py-1.5">
+                                        <div class="text-sm text-gray-500">
+                                            <span class="font-medium text-gray-900">13:00~</span>
+                                        </div>
+                                        <div class="mt-1">
+                                            <h3 class="text-lg font-semibold text-gray-800">
+                                                점심 식사: <a href="https://www.google.com/maps/search/?api=1&query=Goodfellas+悦+Fellas" target="_blank" class="text-blue-600 hover:text-blue-800 hover:underline">
+                                                    Goodfellas (悦 Fellas)
+                                                </a>
+                                            </h3>
+                                            <p class="text-sm text-gray-600">이탈리안 (와이탄 근처)</p>
+                                            <div class="mt-2 p-3 bg-gray-50 rounded-md text-sm">
+                                                <p><strong>특징:</strong> 인기 있는 이탈리안. 아늑하고 활기찬 분위기. <strong>*예약 권장*</strong></p>
+                                                <p><strong>대표:</strong> 화덕피자, 생면 파스타</p>
+                                                <p><strong>가격:</strong> 200-400위안/인</p>
+                                                <p class="mt-1">
+                                                    <strong>*카페 추천:</strong> <a href="https://www.google.com/maps/search/?api=1&query=Polux+by+Paul+Pairet" target="_blank" class="text-blue-600 hover:text-blue-800 hover:underline">
+                                                        Polux by Paul Pairet
+                                                    </a> (프렌치토스트, 치즈케이크)
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+
+                        <!-- Timeline Item: 프랑스 조계지 -->
+                        <li>
+                            <div class="relative pb-8">
+                                <span class="absolute top-5 left-5 -ml-px h-full w-0.5 bg-gray-200" aria-hidden="true"></span>
+                                <div class="relative flex items-start space-x-3">
+                                    <!-- Icon -->
+                                    <div>
+                                        <div class="relative px-1">
+                                            <div class="h-10 w-10 bg-pink-100 rounded-full ring-8 ring-white flex items-center justify-center">
+                                                <svg class="h-6 w-6 text-pink-600" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" /></svg>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Content -->
+                                    <div class="min-w-0 flex-1 py-1.5">
+                                        <div class="text-sm text-gray-500">
+                                            <span class="font-medium text-gray-900">14:30~</span>
+                                        </div>
+                                        <div class="mt-1">
+                                            <h3 class="text-lg font-semibold text-gray-800">
+                                                <a href="https://www.google.com/maps/search/?api=1&query=상하이+프랑스+조계지+法租界" target="_blank" class="text-blue-600 hover:text-blue-800 hover:underline">
+                                                    프랑스 조계지
+                                                </a>, <a href="https://www.google.com/maps/search/?api=1&query=우캉맨션+武康大楼" target="_blank" class="text-blue-600 hover:text-blue-800 hover:underline">
+                                                    우캉맨션
+                                                </a> 산책
+                                            </h3>
+                                            <p class="text-sm text-gray-600">法租界, 武康大楼</p>
+                                            <div class="mt-2 p-3 bg-gray-50 rounded-md text-sm">
+                                                <p><strong>특징:</strong> 플라타너스 가로수가 아름다운 낭만적인 거리, 포토 스팟.</p>
+                                                <p><strong>추천:</strong> 골목 탐방, 인증샷, 카페 휴식 (ops cafe(웨이팅 주의), Polux, Bebaked 등)</p>
+                                                <!-- "더 알아보기" 버튼 추가 -->
+                                                <button class="learn-more-btn mt-2" data-query-type="info" data-location="상하이 프랑스 조계지 (法租界)">✨ 더 알아보기</button>
+                                                <button class="learn-more-btn mt-2" data-query-type="info" data-location="우캉맨션 (武康大楼)">✨ 더 알아보기</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+
+                        <!-- Timeline Item: 저녁 식사 (양꼬치) -->
+                        <li>
+                            <div class="relative pb-8">
+                                <!-- <span class="absolute top-5 left-5 -ml-px h-full w-0.5 bg-gray-200" aria-hidden="true"></span> -->
+                                <div class="relative flex items-start space-x-3">
+                                    <!-- Icon -->
+                                    <div>
+                                        <div class="relative px-1">
+                                            <div class="h-10 w-10 bg-orange-100 rounded-full ring-8 ring-white flex items-center justify-center">
+                                                <svg class="h-6 w-6 text-orange-600" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.362 5.214A8.252 8.252 0 0112 21 8.25 8.25 0 016.038 7.048 8.287 8.287 0 009 9.6a8.983 8.983 0 013.362-3.797z" /><path stroke-linecap="round" stroke-linejoin="round" d="M15.362 5.214A8.252 8.252 0 0112 21 8.25 8.25 0 016.038 7.048 8.287 8.287 0 009 9.6a8.983 8.983 0 013.362-3.797zM15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Content -->
+                                    <div class="min-w-0 flex-1 py-1.5">
+                                        <div class="text-sm text-gray-500">
+                                            <span class="font-medium text-gray-900">18:30~</span>
+                                        </div>
+                                        <div class="mt-1">
+                                            <h3 class="text-lg font-semibold text-gray-800">
+                                                저녁 식사: <a href="https://www.google.com/maps/search/?api=1&query=很久以前只是家串店+제일백화점" target="_blank" class="text-blue-600 hover:text-blue-800 hover:underline">
+                                                    很久以前只是家串店 (헌지우이치엔)
+                                                </a>
+                                            </h3>
+                                            <p class="text-sm text-gray-600">很久以前羊肉串 (양꼬치)</p>
+                                            <div class="mt-2 p-3 bg-gray-50 rounded-md text-sm">
+                                                <p><strong>특징:</strong> '양꼬치계의 하이디라오'. 자동 굽기 시스템.</p>
+                                                <p><strong>대표:</strong> 양꼬치, 가리비 구이</p>
+                                                <p><strong>가격:</strong> 150-250위안/인</p>
+                                                <p class="mt-1 font-semibold text-red-600">* 제일백화점 B동 6층 (주소에 830), 위챗으로 50km 내 예약 가능</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+
+                    </ul>
+                </div>
+                <!-- NEW: 이미지 요약 버튼 -->
+                <div class="mt-10 text-center">
+                    <button class="image-summary-btn" data-day-summary="Eating Shengjian buns at Dahuchun, visiting the Provisional Government of Korea, exploring Xintiandi, and walking through the French Concession and Wukang Mansion.">
+                        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l-1.586-1.586a2 2 0 00-2.828 0L6 14m6-6l.207.207a2 2 0 002.828 0L18 8m-6 6l2 2m-2-2l-2-2m2 2l-2 2m-2-2l2-2" /></svg>
+                        ✨ 이 날을 이미지로 요약하기
+                    </button>
+                </div>
+            </section>
+            
+            <!-- Day 3: 10/27 (월) -->
+            <section class="mb-12">
+                <h2 class="text-2xl font-bold text-indigo-800 border-b-2 border-indigo-100 pb-2 mb-8">3일차 (10/27)</h2>
+                <div class="flow-root">
+                    <ul class="-mb-8">
+                        
+                        <!-- Timeline Item: 아침 식사 -->
+                        <li>
+                            <div class="relative pb-8">
+                                <span class="absolute top-5 left-5 -ml-px h-full w-0.5 bg-gray-200" aria-hidden="true"></span>
+                                <div class="relative flex items-start space-x-3">
+                                    <!-- Icon -->
+                                    <div>
+                                        <div class="relative px-1">
+                                            <div class="h-10 w-10 bg-orange-100 rounded-full ring-8 ring-white flex items-center justify-center">
+                                                <svg class="h-6 w-6 text-orange-600" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9 5.25h.008v.008H12v-.008z" /></svg>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Content -->
+                                    <div class="min-w-0 flex-1 py-1.5">
+                                        <div class="text-sm text-gray-500">
+                                            <span class="font-medium text-gray-900">09:00~</span>
+                                        </div>
+                                        <div class="mt-1">
+                                            <h3 class="text-lg font-semibold text-gray-800">
+                                                아침 식사: <a href="https://www.google.com/maps/search/?api=1&query=Lai+Lai+Xiao+Long+莱莱小笼" target="_blank" class="text-blue-600 hover:text-blue-800 hover:underline">
+                                                    Lai Lai Xiao Long (라이라이 샤오롱)
+                                                </a>
+                                            </h3>
+                                            <p class="text-sm text-gray-600">莱莱小笼 (샤오롱바오)</p>
+                                            <div class="mt-2 p-3 bg-gray-50 rounded-md text-sm">
+                                                <p><strong>특징:</strong> 게살 샤오롱바오와 국수로 유명한 현지 맛집.</p>
+                                                <p><strong>대표:</strong> 게살 샤오롱바오(蟹粉小笼), 비빔 국수(葱油拌面)</p>
+                                                <p><strong>가격:</strong> 50-80위안/인</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+
+                        <!-- Timeline Item: 예원 -->
+                        <li>
+                            <div class="relative pb-8">
+                                <span class="absolute top-5 left-5 -ml-px h-full w-0.5 bg-gray-200" aria-hidden="true"></span>
+                                <div class="relative flex items-start space-x-3">
+                                    <!-- Icon -->
+                                    <div>
+                                        <div class="relative px-1">
+                                            <div class="h-10 w-10 bg-teal-100 rounded-full ring-8 ring-white flex items-center justify-center">
+                                                <svg class="h-6 w-6 text-teal-600" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M10.125 2.25h-4.5c-1.125 0-2.25.9-2.25 2.25v15c0 1.125.9 2.25 2.25 2.25h13.5c1.125 0 2.25-.9 2.25-2.25v-15c0-1.125-.9-2.25-2.25-2.25h-4.5m-7.5 0l.071 0.071c.071.071.071.184 0 .254l-0.071.071M10.125 2.25l.071 0.071c.071.071.071.184 0 .254l-0.071.071M10.125 2.25l.071 0.071c.071.071.071.184 0 .254l-0.071.071m5.625 2.25l.071.071c.071.071.071.184 0 .254l-0.071.071M15.75 4.5l.071.071c.071.071.071.184 0 .254l-0.071.071M15.75 4.5l.071.071c.071.071.071.184 0 .254l-0.071.071M15.75 4.5l.071.071c.071.071.071.184 0 .254l-0.071.071M4.5 9h15m-15 3h15m-15 3h15m-15 3h15" /></svg>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Content -->
+                                    <div class="min-w-0 flex-1 py-1.5">
+                                        <div class="text-sm text-gray-500">
+                                            <span class="font-medium text-gray-900">10:30~</span>
+                                        </div>
+                                        <div class="mt-1">
+                                            <h3 class="text-lg font-semibold text-gray-800">
+                                                <a href="https://www.google.com/maps/search/?api=1&query=예원+豫园" target="_blank" class="text-blue-600 hover:text-blue-800 hover:underline">
+                                                    예원
+                                                </a> 및 예원상성 둘러보기
+                                            </h3>
+                                            <p class="text-sm text-gray-600">豫园 (Yu Garden)</p>
+                                            <div class="mt-2 p-3 bg-gray-50 rounded-md text-sm">
+                                                <p><strong>특징:</strong> 명나라 시대의 고전미를 느낄 수 있는 섬세하고 아름다운 정원.</p>
+                                                <!-- "더 알아보기" 버튼 추가 -->
+                                                <button class="learn-more-btn mt-2" data-query-type="info" data-location="예원 (豫园)">✨ 더 알아보기</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+
+                        <!-- Timeline Item: 점심 (옵션) -->
+                        <li>
+                            <div class="relative pb-8">
+                                <span class="absolute top-5 left-5 -ml-px h-full w-0.5 bg-gray-200" aria-hidden="true"></span>
+                                <div class="relative flex items-start space-x-3">
+                                    <!-- Icon -->
+                                    <div>
+                                        <div class="relative px-1">
+                                            <div class="h-10 w-10 bg-orange-100 rounded-full ring-8 ring-white flex items-center justify-center">
+                                                <svg class="h-6 w-6 text-orange-600" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9 5.25h.008v.008H12v-.008z" /></svg>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Content -->
+                                    <div class="min-w-0 flex-1 py-1.5">
+                                        <div class="text-sm text-gray-500">
+                                            <span class="font-medium text-gray-900">12:30~</span>
+                                        </div>
+                                        <div class="mt-1">
+                                            <h3 class="text-lg font-semibold text-gray-800">점심 식사 (옵션 선택)</h3>
+                                            <div class="mt-2 space-y-2">
+                                                <div class="p-3 bg-gray-50 rounded-md text-sm">
+                                                    <p><strong>옵션 1 (훠궈):</strong> <a href="https://www.google.com/maps/search/?api=1&query=주광옥워궈+朱光玉火锅馆" target="_blank" class="text-blue-600 hover:text-blue-800 hover:underline">주광옥워궈 (朱光玉火锅馆)</a></p>
+                                                    <p>상하이 핫한 충칭식 훠궈 (250-400위안/인)</p>
+                                                </div>
+                                                <div class="p-3 bg-gray-50 rounded-md text-sm">
+                                                    <p><strong>옵션 2 (광둥식):</strong> <a href="https://www.google.com/maps/search/?api=1&query=Xiyue+No.8+Canton+8+喜粤8号(南京东路店)" target="_blank" class="text-blue-600 hover:text-blue-800 hover:underline">Xiyue No.8 (Canton 8) - 喜粤8号(南京东路店)</a></p>
+                                                    <p>가성비 미쉐린 스타 (150-250위안/인)</p>
+                                                    <p class="font-semibold text-red-600">* Canton 8: 예약 필수 (워크인 or 전화/호텔 요청)</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+
+                        <!-- Timeline Item: 오후 자유시간 -->
+                        <li>
+                            <div class="relative pb-8">
+                                <span class="absolute top-5 left-5 -ml-px h-full w-0.5 bg-gray-200" aria-hidden="true"></span>
+                                <div class="relative flex items-start space-x-3">
+                                    <!-- Icon -->
+                                    <div>
+                                        <div class="relative px-1">
+                                            <div class="h-10 w-10 bg-cyan-100 rounded-full ring-8 ring-white flex items-center justify-center">
+                                                <svg class="h-6 w-6 text-cyan-600" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M21 7.5l-9-5.25L3 7.5m18 0l-9 5.25L3 7.5m18 0v9l-9 5.25L3 16.5v-9m18 0L12 12.75 3 7.5M12 12.75v9M3 16.5l9 5.25 9-5.25M12 21.75V12.75" /></svg>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Content -->
+                                    <div class="min-w-0 flex-1 py-1.5">
+                                        <div class="text-sm text-gray-500">
+                                            <span class="font-medium text-gray-900">14:30~</span>
+                                        </div>
+                                        <div class="mt-1">
+                                            <h3 class="text-lg font-semibold text-gray-800">
+                                                오후 자유시간: <a href="https://www.google.com/maps/search/?api=1&query=진안사+Jing'an+Temple+静安寺" target="_blank" class="text-blue-600 hover:text-blue-800 hover:underline">
+                                                    진안사 (Jing'an Temple)
+                                                </a>
+                                            </h3>
+                                            <p class="text-sm text-gray-600">静安寺</p>
+                                            <div class="mt-2 p-3 bg-gray-50 rounded-md text-sm">
+                                                <p><strong>카페/디저트 추천:</strong></p>
+                                                <ul class="list-disc list-inside ml-2">
+                                                    <li><a href="https://www.google.com/maps/search/?api=1&query=Starbucks+Reserve+Roastery+상하이" target="_blank" class="text-blue-600 hover:text-blue-800 hover:underline">Starbucks Reserve Roastery (星巴克臻选上海烘焙工坊)</a></li>
+                                                    <li><a href="https://www.google.com/maps/search/?api=1&query=Ops+Cafe+상하이" target="_blank" class="text-blue-600 hover:text-blue-800 hover:underline">Ops Cafe</a></li>
+                                                    <li><a href="https://www.google.com/maps/search/?api=1&query=헤이티+喜茶+상하이" target="_blank" class="text-blue-600 hover:text-blue-800 hover:underline">헤이티(喜茶)</a></li>
+                                                    <li><a href="https://www.google.com/maps/search/?api=1&query=홀리랜드+好利来+상하이" target="_blank" class="text-blue-600 hover:text-blue-800 hover:underline">홀리랜드(好利来)</a> 수건 케이크</li>
+                                                </ul>
+                                                <!-- "더 알아보기" 버튼 추가 -->
+                                                <button class="learn-more-btn mt-2" data-query-type="info" data-location="진안사 (静安寺)">✨ 더 알아보기</button>
+                                                <button class="learn-more-btn mt-2" data-query-type="info" data-location="Starbucks Reserve Roastery 상하이 (星巴克臻选上海烘焙工坊)">✨ 더 알아보기</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+
+                        <!-- Timeline Item: 저녁 (Hakkasan) -->
+                        <li>
+                            <div class="relative pb-8">
+                                <!-- <span class="absolute top-5 left-5 -ml-px h-full w-0.5 bg-gray-200" aria-hidden="true"></span> -->
+                                <div class="relative flex items-start space-x-3">
+                                    <!-- Icon -->
+                                    <div>
+                                        <div class="relative px-1">
+                                            <div class="h-10 w-10 bg-purple-100 rounded-full ring-8 ring-white flex items-center justify-center">
+                                                <svg class="h-6 w-6 text-purple-600" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.31h5.513c.47 0 .682.559.342.886l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 01.342-.886h5.513a.563.563 0 00.475-.31l2.125-5.112z" /></svg>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Content -->
+                                    <div class="min-w-0 flex-1 py-1.5">
+                                        <div class="text-sm text-gray-500">
+                                            <span class="font-medium text-gray-900">18:00</span>
+                                        </div>
+                                        <div class="mt-1">
+                                            <h3 class="text-lg font-semibold text-gray-800">
+                                                저녁 식사: <a href="https://www.google.com/maps/search/?api=1&query=Hakkasan+上海外滩店" target="_blank" class="text-blue-600 hover:text-blue-800 hover:underline">
+                                                    Hakkasan (파인 다이닝)
+                                                </a>
+                                            </h3>
+                                            <p class="text-sm text-gray-600">Hakkasan 上海外滩店</p>
+                                            <div class="mt-2 p-3 bg-yellow-50 border border-yellow-200 rounded-md text-sm">
+                                                <p class="font-bold text-red-700">* 예약 완료: 6시 (예약번호: VQVAQ5)</p>
+                                                <p class="font-bold text-red-700">* 드레스 코드: 스마트 캐주얼</p>
+                                                <p class="mt-1"><strong>특징:</strong> 와이탄 뷰, 모던 광둥식 레스토랑.</p>
+                                                <p><strong>대표:</strong> 딤섬 플래터, 북경 오리</p>
+                                                <p><strong>가격:</strong> 800-1,200위안/인</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <!-- NEW: 이미지 요약 버튼 -->
+                <div class="mt-10 text-center">
+                    <button class="image-summary-btn" data-day-summary="Eating crab xiao long bao, visiting the classical Yu Garden, optional hotpot or michelin cantonese lunch, exploring Jing'an Temple, and fine dining at Hakkasan with a view.">
+                        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l-1.586-1.586a2 2 0 00-2.828 0L6 14m6-6l.207.207a2 2 0 002.828 0L18 8m-6 6l2 2m-2-2l-2-2m2 2l-2 2m-2-2l2-2" /></svg>
+                        ✨ 이 날을 이미지로 요약하기
+                    </button>
+                </div>
+            </section>
+            
+            <!-- Day 4: 10/28 (화) -->
+            <section class="mb-12">
+                <h2 class="text-2xl font-bold text-indigo-800 border-b-2 border-indigo-100 pb-2 mb-8">4일차 (10/28)</h2>
+                <div class="flow-root">
+                    <ul class="-mb-8">
+                        
+                        <!-- Timeline Item: 아침/쇼핑 -->
+                        <li>
+                            <div class="relative pb-8">
+                                <span class="absolute top-5 left-5 -ml-px h-full w-0.5 bg-gray-200" aria-hidden="true"></span>
+                                <div class="relative flex items-start space-x-3">
+                                    <!-- Icon -->
+                                    <div>
+                                        <div class="relative px-1">
+                                            <div class="h-10 w-10 bg-rose-100 rounded-full ring-8 ring-white flex items-center justify-center">
+                                                <svg class="h-6 w-6 text-rose-600" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007zM8.625 10.5a.375.375 0 11-.75 0 .375.375 0 01.75 0zm7.5 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" /></svg>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Content -->
+                                    <div class="min-w-0 flex-1 py-1.5">
+                                        <div class="text-sm text-gray-500">
+                                            <span class="font-medium text-gray-900">10:00~</span>
+                                        </div>
+                                        <div class="mt-1">
+                                            <h3 class="text-lg font-semibold text-gray-800">
+                                                아침 식사 및 쇼핑: <a href="https://www.google.com/maps/search/?api=1&query=Lilian+Bakery+莉莲蛋挞" target="_blank" class="text-blue-600 hover:text-blue-800 hover:underline">
+                                                    Lilian Bakery
+                                                </a>
+                                            </h3>
+                                            <p class="text-sm text-gray-600">莉莲蛋挞 (에그타르트)</p>
+                                            <div class="mt-2 p-3 bg-gray-50 rounded-md text-sm">
+                                                <p><strong>특징:</strong> 상하이 최고의 에그타르트 맛집. 선물용 포장.</p>
+                                                <p class="mt-1">
+                                                    <strong>*카페 추천:</strong> <a href="https://www.google.com/maps/search/?api=1&query=bebaked+环宇客厅(真如环宇城店)" target="_blank" class="text-blue-600 hover:text-blue-800 hover:underline">
+                                                        bebaked (环宇客厅(真如环宇城店))
+                                                    </a>
+                                                </p>
+                                                <p class="text-xs">주소: 铜川路699弄1号中海环宇城L1层L1011</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+
+                        <!-- Timeline Item: 자유 점심 -->
+                        <li>
+                            <div class="relative pb-8">
+                                <span class="absolute top-5 left-5 -ml-px h-full w-0.5 bg-gray-200" aria-hidden="true"></span>
+                                <div class="relative flex items-start space-x-3">
+                                    <!-- Icon -->
+                                    <div>
+                                        <div class="relative px-1">
+                                            <div class="h-10 w-10 bg-orange-100 rounded-full ring-8 ring-white flex items-center justify-center">
+                                                <svg class="h-6 w-6 text-orange-600" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9 5.25h.008v.008H12v-.008z" /></svg>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Content -->
+                                    <div class="min-w-0 flex-1 py-1.5">
+                                        <div class="text-sm text-gray-500">
+                                            <span class="font-medium text-gray-900">12:00~</span>
+                                        </div>
+                                        <div class="mt-1">
+                                            <h3 class="text-lg font-semibold text-gray-800">
+                                                자유로운 점심 식사
+                                            </h3>
+                                            <p class="text-sm text-gray-600">쇼핑 동선이나 취향에 맞춰 자유롭게 선택.</p>
+                                            <!-- "맛집 추천" 버튼 추가 -->
+                                            <button class="food-recommend-btn mt-3" data-query-type="food" data-location="bebaked 环宇客厅(真如环宇城店)">
+                                                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" /></svg>
+                                                ✨ 주변 맛집 추천
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+
+                        <!-- Timeline Item: 공항 이동 -->
+                        <li>
+                            <div class="relative pb-8">
+                                <span class="absolute top-5 left-5 -ml-px h-full w-0.5 bg-gray-200" aria-hidden="true"></span>
+                                <div class="relative flex items-start space-x-3">
+                                    <!-- Icon -->
+                                    <div>
+                                        <div class="relative px-1">
+                                            <div class="h-10 w-10 bg-blue-100 rounded-full ring-8 ring-white flex items-center justify-center">
+                                                <svg class="h-6 w-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.875L6 12z" /></svg>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Content -->
+                                    <div class="min-w-0 flex-1 py-1.5">
+                                        <div class="text-sm text-gray-500">
+                                            <span class="font-medium text-gray-900">16:50</span>
+                                        </div>
+                                        <div class="mt-1">
+                                            <h3 class="text-lg font-semibold text-gray-800">
+                                                <a href="https://www.google.com/maps/search/?api=1&query=SHA+홍차오+국제공항+T1+上海虹桥国际机场" target="_blank" class="text-blue-600 hover:text-blue-800 hover:underline">
+                                                    SHA 홍차오 국제공항 T1 출발
+                                                </a>
+                                            </h3>
+                                            <p class="text-sm text-gray-600">상하이항공 FM823 | 일반석 R | 보잉 737-200</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+
+                        <!-- Timeline Item: 김포 도착 -->
+                        <li>
+                            <div class="relative pb-8">
+                                <!-- <span class="absolute top-5 left-5 -ml-px h-full w-0.5 bg-gray-200" aria-hidden="true"></span> -->
+                                <div class="relative flex items-start space-x-3">
+                                    <!-- Icon -->
+                                    <div>
+                                        <div class="relative px-1">
+                                            <div class="h-10 w-10 bg-green-100 rounded-full ring-8 ring-white flex items-center justify-center">
+                                                <svg class="h-6 w-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" /></svg>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Content -->
+                                    <div class="min-w-0 flex-1 py-1.5">
+                                        <div class="text-sm text-gray-500">
+                                            <span class="font-medium text-gray-900">19:50</span>
+                                        </div>
+                                        <div class="mt-1">
+                                            <h3 class="text-lg font-semibold text-gray-800">
+                                                <a href="https://www.google.com/maps/search/?api=1&query=GMP+김포국제공항+I" target="_blank" class="text-blue-600 hover:text-blue-800 hover:underline">
+                                                    GMP 김포국제공항 I 도착
+                                                </a>
+                                            </h3>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+
+                    </ul>
+                </div>
+                <!-- NEW: 이미지 요약 버튼 -->
+                <div class="mt-10 text-center">
+                    <button class="image-summary-btn" data-day-summary="Eating delicious egg tarts at Lilian Bakery, souvenir shopping, and heading to Hongqiao airport for departure.">
+                        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l-1.586-1.586a2 2 0 00-2.828 0L6 14m6-6l.207.207a2 2 0 002.828 0L18 8m-6 6l2 2m-2-2l-2-2m2 2l-2 2m-2-2l2-2" /></svg>
+                        ✨ 이 날을 이미지로 요약하기
+                    </button>
+                </div>
+            </section>
+
+            <!-- NEW: Trip Review Button -->
+            <div class="mt-12 text-center p-6 border-t-2 border-indigo-100">
+                <button class="generate-trip-review-btn w-full md:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 bg-green-600 text-white font-semibold rounded-lg shadow-md hover:bg-green-700 transition-all duration-200 text-base">
+                    <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" /></svg>
+                    ✨ 전체 여행 일기 생성하기
+                </button>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- Gemini API Modal (회화 도우미) -->
+    <div id="phraseModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 hidden transition-opacity opacity-0" aria-labelledby="phrase-modal-title" role="dialog" aria-modal="true">
+        <div class="bg-white rounded-lg shadow-xl w-full max-w-lg p-6 m-4 transform transition-all scale-95 opacity-0" id="phrase-modal-content">
+            <!-- Modal Header -->
+            <div class="flex items-center justify-between pb-3 border-b border-gray-200">
+                <h3 class="text-2xl font-semibold text-gray-900" id="phrase-modal-title">✨ 중국어 회화 도우미</h3>
+                <button id="closePhraseModalBtn" class="p-1 rounded-full text-gray-400 hover:bg-gray-100 hover:text-gray-600 transition-all">
+                    <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
+                </button>
+            </div>
+            
+            <!-- Modal Body -->
+            <div class="mt-4">
+                <label for="situationInput" class="block text-sm font-medium text-gray-700">어떤 상황인가요?</label>
+                <input type="text" id="situationInput" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" placeholder="예: 식당에서 주문하기">
+                <button id="generatePhraseBtn" class="mt-4 w-full inline-flex justify-center items-center px-4 py-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all">
+                    <span id="btn-text">생성하기</span>
+                    <span id="btn-loader" class="btn-spinner hidden ml-2"></span>
+                </button>
+            </div>
+
+            <!-- Result Area -->
+            <div id="phraseResultWrapper" class="mt-6 max-h-[50vh] overflow-y-auto">
+                <div id="loader" class="flex justify-center items-center py-6 hidden">
+                    <div class="loading-spinner"></div>
+                </div>
+                <div id="phraseResult" class="space-y-3">
+                    <!-- 생성된 회화가 여기에 삽입됩니다 -->
+                </div>
+            </div>
+
+            <!-- NEW: Travel Tips Section -->
+            <hr class="my-6 border-gray-200">
+            <div>
+                <h4 class="text-xl font-semibold text-gray-800 mb-3">✨ 상하이 여행 꿀팁</h4>
+                <label for="tipInput" class="block text-sm font-medium text-gray-700">궁금한 점을 물어보세요</label>
+                <input type="text" id="tipInput" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" placeholder="예: 알리페이 사용법, 팁 문화">
+                <button id="getTravelTipBtn" class="mt-4 w-full inline-flex justify-center items-center px-4 py-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-all">
+                    <span id="tipBtnText">✨ 꿀팁 물어보기</span>
+                    <span id="tipBtnLoader" class="btn-spinner hidden ml-2"></span>
+                </button>
+                <div id="tipResultWrapper" class="mt-4 hidden">
+                    <div id="tipLoader" class="flex justify-center items-center py-4 hidden">
+                        <div class="loading-spinner"></div>
+                    </div>
+                    <div id="tipResult" class="p-3 bg-green-50 border border-green-200 rounded-md text-gray-800">
+                        <!-- 꿀팁 결과가 여기에 삽입됩니다 -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- NEW: Speech-to-Text and Translation Section -->
+            <hr class="my-6 border-gray-200">
+
+            <div>
+                <h4 class="text-xl font-semibold text-gray-800 mb-3">✨ 원어민 답변 번역하기</h4>
+                <p class="text-sm text-gray-600 mb-4">원어민의 답변을 들어야 할 때, 이 버튼을 누르고 마이크에 대고 말하도록 하세요.</p>
+                <button id="recordReplyBtn" class="w-full inline-flex justify-center items-center px-4 py-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-all">
+                    <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M7 4a3 3 0 016 0v4a3 3 0 11-6 0V4zm4 10.93A7.001 7.001 0 0017 8a1 1 0 10-2 0a5 5 0 01-4 4.9V16h1a1 1 0 110 2H8a1 1 0 110-2h1v-3.07z" clip-rule="evenodd"></path></svg>
+                    <span id="recordBtnText">답변 듣기 시작</span>
+                </button>
+                <div id="sttStatus" class="mt-3 text-sm text-gray-600 italic text-center">마이크 버튼을 누르고 말씀하세요.</div>
+                
+                <div id="translationResultWrapper" class="mt-4 hidden">
+                    <h5 class="text-md font-semibold text-gray-700">번역 결과:</h5>
+                    <div id="translationResult" class="mt-2 p-3 bg-blue-50 border border-blue-200 rounded-md">
+                        <!-- 번역 결과가 여기에 삽입됩니다 -->
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- NEW: Gemini API Modal (장소 정보 / 맛집 추천) -->
+    <div id="infoModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 hidden transition-opacity opacity-0" aria-labelledby="info-modal-title" role="dialog" aria-modal="true">
+        <div class="bg-white rounded-lg shadow-xl w-full max-w-lg p-6 m-4 transform transition-all scale-95 opacity-0" id="info-modal-content">
+            <!-- Modal Header -->
+            <div class="flex items-center justify-between pb-3 border-b border-gray-200">
+                <h3 class="text-2xl font-semibold text-gray-900" id="info-modal-title">✨ 알아보기</h3>
+                <button id="closeInfoModalBtn" class="p-1 rounded-full text-gray-400 hover:bg-gray-100 hover:text-gray-600 transition-all">
+                    <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
+                </button>
+            </div>
+            <!-- Result Area -->
+            <div id="infoResultWrapper" class="mt-6 max-h-[60vh] overflow-y-auto">
+                <div id="infoLoader" class="flex flex-col items-center justify-center py-10">
+                    <div class="loading-spinner"></div>
+                    <p class="mt-4 text-gray-600">정보를 불러오는 중입니다...</p>
+                </div>
+                <!-- 생성된 정보가 여기에 삽입됩니다 -->
+                <div id="infoResult" class="prose prose-blue max-w-none"></div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- NEW Gemini API Modal (이미지 생성) -->
+    <div id="imageGenModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 hidden transition-opacity opacity-0" aria-labelledby="image-modal-title" role="dialog" aria-modal="true">
+        <div class="bg-white rounded-lg shadow-xl w-full max-w-lg p-6 m-4 transform transition-all scale-95 opacity-0" id="image-modal-content">
+            <!-- Modal Header -->
+            <div class="flex items-center justify-between pb-3 border-b border-gray-200">
+                <h3 class="text-2xl font-semibold text-gray-900" id="image-modal-title">✨ 오늘의 이미지 요약</h3>
+                <button id="closeImageModalBtn" class="p-1 rounded-full text-gray-400 hover:bg-gray-100 hover:text-gray-600 transition-all">
+                    <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
+                </button>
+            </div>
+
+            <!-- Result Area -->
+            <div id="imageResultWrapper" class="mt-6 min-h-[300px] flex items-center justify-center">
+                <div id="imageLoader" class="flex flex-col items-center justify-center py-10">
+                    <div class="loading-spinner"></div>
+                    <p class="mt-4 text-gray-600">이미지를 생성 중입니다... (최대 1분 소요)</p>
+                </div>
+                <!-- 생성된 이미지가 여기에 삽입됩니다 -->
+                <img id="generatedImage" src="" alt="Generated trip summary image" class="hidden w-full h-auto rounded-lg shadow-md">
+            </div>
+        </div>
+    </div>
+
+
+    <script type="module">
+        window.addEventListener('DOMContentLoaded', () => {
+            // --- API Endpoints ---
+            const apiKey = ""; // API 키는 Canvas 환경에서 자동으로 제공됩니다.
+            const textApiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+            const imageApiUrl = `https://generativelanguage.googleapis.com/v1beta/models/imagen-3.0-generate-002:predict?key=${apiKey}`;
+            const ttsApiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-tts:generateContent?key=${apiKey}`;
+
+            // --- Modal Control (공통) ---
+            const phraseModal = document.getElementById('phraseModal');
+            const phraseModalContent = document.getElementById('phrase-modal-content');
+            const infoModal = document.getElementById('infoModal');
+            const infoModalContent = document.getElementById('info-modal-content');
+            const imageGenModal = document.getElementById('imageGenModal');
+            const imageModalContent = document.getElementById('image-modal-content');
+
+            function openModal(modal, content) {
+                modal.classList.remove('hidden');
+                setTimeout(() => {
+                    modal.classList.remove('opacity-0');
+                    content.classList.remove('scale-95', 'opacity-0');
+                }, 10);
+            }
+
+            function closeModal(modal, content) {
+                modal.classList.add('opacity-0');
+                content.classList.add('scale-95', 'opacity-0');
+                setTimeout(() => modal.classList.add('hidden'), 200);
+            }
+
+            // --- API Call Helper (Exponential Backoff) ---
+            async function fetchWithBackoff(apiUrl, payload, maxRetries = 5) {
+                let delay = 1000; // 1초
+                for (let i = 0; i < maxRetries; i++) {
+                    try {
+                        const response = await fetch(apiUrl, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(payload)
+                        });
+
+                        if (response.ok) {
+                            return await response.json();
+                        } else if (response.status === 429) {
+                            // Too Many Requests,
+                        } else {
+                            throw new Error(`HTTP error! status: ${response.status}`);
+                        }
+                    } catch (error) {
+                        console.warn(`Attempt ${i + 1} failed: ${error.message}. Retrying in ${delay}ms...`);
+                    }
+                    await new Promise(resolve => setTimeout(resolve, delay));
+                    delay *= 2;
+                }
+                throw new Error("API 요청이 여러 번 실패했습니다.");
+            }
+
+            // --- 기능 1: 여행 회화 도우미 ---
+            const openPhraseModalBtn = document.getElementById('openPhraseModalBtn');
+            const closePhraseModalBtn = document.getElementById('closePhraseModalBtn');
+            const generatePhraseBtn = document.getElementById('generatePhraseBtn');
+            const situationInput = document.getElementById('situationInput');
+            const phraseResult = document.getElementById('phraseResult');
+            const phraseResultWrapper = document.getElementById('phraseResultWrapper');
+            const loader = document.getElementById('loader');
+            const btnText = document.getElementById('btn-text');
+            const btnLoader = document.getElementById('btn-loader');
+
+            if (openPhraseModalBtn) openPhraseModalBtn.addEventListener('click', () => openModal(phraseModal, phraseModalContent));
+            if (closePhraseModalBtn) closePhraseModalBtn.addEventListener('click', () => closeModal(phraseModal, phraseModalContent));
+            if (phraseModal) phraseModal.addEventListener('click', (e) => {
+                if (e.target === phraseModal) closeModal(phraseModal, phraseModalContent);
+            });
+            
+            // *** FIX: 함수 정의를 이벤트 리스너보다 먼저 오도록 이동 ***
+            async function handleGeneratePhrases() {
+                const userInput = situationInput.value.trim();
+                if (!userInput) {
+                    phraseResult.innerHTML = `<p class="text-red-500">상황을 입력해주세요.</p>`;
+                    return;
+                }
+                setLoadingState(true);
+                phraseResult.innerHTML = '';
+                
+                const systemPrompt = "You are a helpful travel assistant for a Korean tourist in Shanghai. Generate useful Chinese phrases for the given situation. Provide the Chinese characters, pinyin, and Korean translation.";
+                const userQuery = `Generate 5-7 useful phrases for this situation: "${userInput}"`;
+
+                const payload = {
+                    contents: [{ parts: [{ text: userQuery }] }],
+                    systemInstruction: { parts: [{ text: systemPrompt }] },
+                    generationConfig: {
+                        responseMimeType: "application/json",
+                        responseSchema: {
+                            type: "OBJECT",
+                            properties: {
+                                phrases: {
+                                    type: "ARRAY",
+                                    items: {
+                                        type: "OBJECT",
+                                        properties: {
+                                            "chinese": { "type": "STRING" },
+                                            "pinyin": { "type": "STRING" },
+                                            "korean": { "type": "STRING" }
+                                        },
+                                        "required": ["chinese", "pinyin", "korean"]
+                                    }
+                                }
+                            }
+                        }
+                    }
+                };
+
+                try {
+                    const result = await fetchWithBackoff(textApiUrl, payload);
+                    const part = result.candidates?.[0]?.content?.parts?.[0];
+                    if (part && part.text) {
+                        const data = JSON.parse(part.text);
+                        renderPhrases(data.phrases);
+                    } else {
+                        throw new Error("유효한 응답을 받지 못했습니다.");
+                    }
+                } catch (error) {
+                    console.error("Error generating phrases:", error);
+                    phraseResult.innerHTML = `<p class="text-red-500">회화 생성 중 오류가 발생했습니다: ${error.message}</p>`;
+                } finally {
+                    setLoadingState(false);
+                }
+            }
+            
+            if (generatePhraseBtn) generatePhraseBtn.addEventListener('click', handleGeneratePhrases);
+
+            function renderPhrases(phrases) {
+                if (!phrases || phrases.length === 0) {
+                    phraseResult.innerHTML = `<p class="text-gray-500">생성된 회화가 없습니다.</p>`;
+                    return;
+                }
+                phraseResult.innerHTML = phrases.map(phrase => `
+                    <div class="phrase-item p-3 border rounded-lg bg-gray-50 shadow-sm">
+                        <p class="text-xl font-bold text-gray-900">${phrase.chinese}</p>
+                        <p class="text-md italic text-gray-600">${phrase.pinyin}</p>
+                        <p class="text-md text-gray-700 mt-1">${phrase.korean}</p>
+                        <button class="speak-btn mt-3 inline-flex items-center gap-2 px-3 py-1.5 bg-blue-100 text-blue-700 font-medium rounded-md hover:bg-blue-200 transition-all text-sm" data-text-to-speak="${phrase.chinese}">
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M19.114 5.636a9 9 0 010 12.728M16.463 8.288a5.25 5.25 0 010 7.424M6.75 8.25l4.72-4.72a.75.75 0 011.28.53v15.88a.75.75 0 01-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.009 9.009 0 012.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75z" /></svg>
+                            <span class="btn-text">듣기</span>
+                            <span class="btn-spinner hidden"></span>
+                        </button>
+                    </div>
+                `).join('');
+            }
+
+            function setLoadingState(isLoading) {
+                if (isLoading) {
+                    loader.classList.remove('hidden');
+                    generatePhraseBtn.disabled = true;
+                    btnText.classList.add('hidden');
+                    btnLoader.classList.remove('hidden');
+                } else {
+                    loader.classList.add('hidden');
+                    generatePhraseBtn.disabled = false;
+                    btnText.classList.remove('hidden');
+                    btnLoader.classList.add('hidden');
+                }
+            }
+
+            if (phraseResultWrapper) phraseResultWrapper.addEventListener('click', async (e) => {
+                const speakButton = e.target.closest('.speak-btn');
+                if (speakButton) {
+                    const textToSpeak = speakButton.dataset.textToSpeak;
+                    const buttonTextElem = speakButton.querySelector('.btn-text');
+                    const buttonSpinnerElem = speakButton.querySelector('.btn-spinner');
+                    speakButton.disabled = true;
+                    buttonTextElem.textContent = '로딩중...';
+                    buttonSpinnerElem.classList.remove('hidden');
+                    try {
+                        await handleSpeakText(textToSpeak);
+                    } catch (error) {
+                        console.error("Error generating speech:", error);
+                        buttonTextElem.textContent = '오류';
+                        alert(`음성 생성 중 오류가 발생했습니다: ${error.message}`);
+                    } finally {
+                        speakButton.disabled = false;
+                        buttonTextElem.textContent = '듣기';
+                        buttonSpinnerElem.classList.add('hidden');
+                    }
+                }
+            });
+
+            async function handleSpeakText(textToSpeak) {
+                const payload = {
+                    contents: [{ parts: [{ text: `Say in standard Mandarin Chinese: ${textToSpeak}` }] }],
+                    generationConfig: {
+                        responseModalities: ["AUDIO"],
+                        speechConfig: { voiceConfig: { prebuiltVoiceConfig: { voiceName: "Charon" } } }
+                    },
+                    model: "gemini-2.5-flash-preview-tts"
+                };
+                const result = await fetchWithBackoff(ttsApiUrl, payload);
+                const part = result.candidates?.[0]?.content?.parts?.[0];
+                const audioData = part?.inlineData?.data;
+                const mimeType = part?.inlineData?.mimeType;
+
+                if (audioData && mimeType && mimeType.startsWith("audio/")) {
+                    const sampleRateMatch = mimeType.match(/rate=(\d+)/);
+                    if (!sampleRateMatch) throw new Error("Sample rate not found in mimeType");
+                    const sampleRate = parseInt(sampleRateMatch[1], 10);
+                    const pcmData = base64ToArrayBuffer(audioData);
+                    const pcm16 = new Int16Array(pcmData);
+                    const wavBlob = pcmToWav(pcm16, sampleRate);
+                    const audioUrl = URL.createObjectURL(wavBlob);
+                    const audio = new Audio(audioUrl);
+                    await audio.play();
+                } else {
+                    throw new Error("유효한 오디오 데이터를 받지 못했습니다.");
+                }
+            }
+
+            // --- NEW: 기능 1.5: 여행 꿀팁 ---
+            const getTravelTipBtn = document.getElementById('getTravelTipBtn');
+            const tipInput = document.getElementById('tipInput');
+            const tipResultWrapper = document.getElementById('tipResultWrapper');
+            const tipResult = document.getElementById('tipResult');
+            const tipBtnText = document.getElementById('tipBtnText');
+            const tipBtnLoader = document.getElementById('tipBtnLoader');
+            const tipLoader = document.getElementById('tipLoader');
+
+            if (getTravelTipBtn) {
+                getTravelTipBtn.addEventListener('click', handleGetTravelTip);
+            }
+
+            async function handleGetTravelTip() {
+                const userInput = tipInput.value.trim();
+                if (!userInput) {
+                    tipResultWrapper.classList.remove('hidden');
+                    tipResult.innerHTML = `<p class="text-red-500">질문을 입력해주세요.</p>`;
+                    return;
+                }
+
+                // Set loading state
+                getTravelTipBtn.disabled = true;
+                tipBtnText.classList.add('hidden');
+                tipBtnLoader.classList.remove('hidden');
+                tipResultWrapper.classList.remove('hidden');
+                tipResult.innerHTML = '';
+                tipLoader.classList.remove('hidden');
+
+                const systemPrompt = "You are a helpful travel guide for a Korean tourist in Shanghai. Answer their question concisely in Korean. Provide practical, actionable advice.";
+                const userQuery = `My question is: "${userInput}". Give me a helpful tip.`;
+
+                const payload = {
+                    contents: [{ parts: [{ text: userQuery }] }],
+                    systemInstruction: { parts: [{ text: systemPrompt }] }
+                };
+
+                try {
+                    const result = await fetchWithBackoff(textApiUrl, payload);
+                    const text = result.candidates?.[0]?.content?.parts?.[0]?.text;
+                    
+                    if (text) {
+                        tipResult.innerHTML = `<p>${text.replace(/\n/g, '<br>')}</p>`;
+                    } else {
+                        throw new Error("유효한 답변을 받지 못했습니다.");
+                    }
+                } catch (error) {
+                    console.error("Error getting travel tip:", error);
+                    tipResult.innerHTML = `<p class="text-red-500">팁을 가져오는 중 오류가 발생했습니다: ${error.message}</p>`;
+                } finally {
+                    // Unset loading state
+                    getTravelTipBtn.disabled = false;
+                    tipBtnText.classList.remove('hidden');
+                    tipBtnLoader.classList.add('hidden');
+                    tipLoader.classList.add('hidden');
+                }
+            }
+
+
+            // --- 기능 5: 음성 인식 및 번역 ---
+            const recordReplyBtn = document.getElementById('recordReplyBtn');
+            const recordBtnText = document.getElementById('recordBtnText');
+            const sttStatus = document.getElementById('sttStatus');
+            const translationResultWrapper = document.getElementById('translationResultWrapper');
+            const translationResult = document.getElementById('translationResult');
+
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            let recognition;
+
+            if (SpeechRecognition && recordReplyBtn) {
+                recognition = new SpeechRecognition();
+                recognition.lang = 'zh-CN'; // 중국어(간체)
+                recognition.interimResults = false;
+                recognition.maxAlternatives = 1;
+
+                recordReplyBtn.addEventListener('click', () => {
+                    if (recordBtnText.textContent === '답변 듣기 시작') {
+                        try {
+                            recognition.start();
+                            recordBtnText.textContent = '듣는 중...';
+                            sttStatus.textContent = '원어민의 답변을 듣고 있습니다...';
+                            recordReplyBtn.classList.replace('bg-red-600', 'bg-gray-500');
+                            recordReplyBtn.classList.replace('hover:bg-red-700', 'hover:bg-gray-600');
+                            translationResultWrapper.classList.add('hidden');
+                            translationResult.innerHTML = '';
+                        } catch (e) {
+                            sttStatus.textContent = '오류: 이미 듣고 있습니다.';
+                        }
+                    } else {
+                        recognition.stop();
+                        recordBtnText.textContent = '답변 듣기 시작';
+                        sttStatus.textContent = '마이크 버튼을 누르고 말씀하세요.';
+                        recordReplyBtn.classList.replace('bg-gray-500', 'bg-red-600');
+                        recordReplyBtn.classList.replace('hover:bg-gray-600', 'hover:bg-red-700');
+                    }
+                });
+
+                recognition.onresult = (event) => {
+                    const transcribedText = event.results[0][0].transcript;
+                    sttStatus.textContent = `인식된 중국어: ${transcribedText}`;
+                    handleTranslate(transcribedText);
+                };
+
+                recognition.onspeechend = () => {
+                    recognition.stop();
+                    recordBtnText.textContent = '답변 듣기 시작';
+                    sttStatus.textContent = '음성 인식이 완료되었습니다. 번역 중...';
+                    recordReplyBtn.classList.replace('bg-gray-500', 'bg-red-600');
+                    recordReplyBtn.classList.replace('hover:bg-gray-600', 'hover:bg-red-700');
+                };
+
+                recognition.onend = () => {
+                    if (recordBtnText.textContent !== '답변 듣기 시작') {
+                        recordBtnText.textContent = '답변 듣기 시작';
+                        recordReplyBtn.classList.replace('bg-gray-500', 'bg-red-600');
+                        recordReplyBtn.classList.replace('hover:bg-gray-600', 'hover:bg-red-700');
+                    }
+                };
+
+                recognition.onerror = (event) => {
+                    let errorMessage = `음성 인식 오류: ${event.error}.`;
+                    if (event.error === 'not-allowed') {
+                        errorMessage = '마이크 접근 권한이 차단되었습니다. 브라우저 설정을 확인해주세요.';
+                    } else if (event.error === 'no-speech') {
+                        errorMessage = '음성이 감지되지 않았습니다. 다시 시도해주세요.';
+                    }
+                    sttStatus.textContent = errorMessage;
+                    recordBtnText.textContent = '답변 듣기 시작';
+                    recordReplyBtn.classList.replace('bg-gray-500', 'bg-red-600');
+                    recordReplyBtn.classList.replace('hover:bg-gray-600', 'hover:bg-red-700');
+                };
+
+                async function handleTranslate(textToTranslate) {
+                    translationResultWrapper.classList.remove('hidden');
+                    translationResult.innerHTML = `<p class="text-gray-500">번역 중...</p>`;
+                    
+                    const systemPrompt = "You are an expert translator. Translate the given Chinese text to Korean.";
+                    const userQuery = `Translate this to Korean: "${textToTranslate}"`;
+                    const payload = {
+                        contents: [{ parts: [{ text: userQuery }] }],
+                        systemInstruction: { parts: [{ text: systemPrompt }] }
+                    };
+
+                    try {
+                        const result = await fetchWithBackoff(textApiUrl, payload);
+                        const translatedText = result.candidates?.[0]?.content?.parts?.[0]?.text;
+                        
+                        if (translatedText) {
+                            translationResult.innerHTML = `<p class="text-lg font-semibold text-blue-700">${translatedText}</p>`;
+                        } else {
+                            throw new Error("유효한 번역을 받지 못했습니다.");
+                        }
+                    } catch (error) {
+                        console.error("Error translating text:", error);
+                        translationResult.innerHTML = `<p class="text-red-500">번역 중 오류가 발생했습니다: ${error.message}</p>`;
+                    }
+                }
+
+            } else if (recordReplyBtn) {
+                // SpeechRecognition API 미지원
+                recordReplyBtn.disabled = true;
+                sttStatus.textContent = '이 브라우저는 음성 인식을 지원하지 않습니다. Chrome 브라우저를 사용해 보세요.';
+                recordReplyBtn.classList.replace('bg-red-600', 'bg-gray-400');
+                recordReplyBtn.classList.replace('hover:bg-red-700', 'cursor-not-allowed');
+            }
+
+
+            // --- 기능 2 & 3: 정보 / 맛집 추천 ---
+            const itineraryMain = document.getElementById('itinerary-main');
+            const infoModalTitle = document.getElementById('info-modal-title');
+            const infoResult = document.getElementById('infoResult');
+            const infoLoader = document.getElementById('infoLoader');
+            const closeInfoModalBtn = document.getElementById('closeInfoModalBtn');
+
+            if (itineraryMain) itineraryMain.addEventListener('click', (e) => {
+                const infoBtn = e.target.closest('.learn-more-btn');
+                const foodBtn = e.target.closest('.food-recommend-btn');
+                const imageBtn = e.target.closest('.image-summary-btn');
+                const reviewBtn = e.target.closest('.generate-trip-review-btn'); // NEW
+                
+                if (infoBtn) {
+                    const location = infoBtn.dataset.location;
+                    handleGetInfo(location);
+                }
+                if (foodBtn) {
+                    const location = foodBtn.dataset.location;
+                    handleGetFoodRecs(location);
+                }
+                if (imageBtn) {
+                    const summary = imageBtn.dataset.daySummary;
+                    handleGenerateImage(summary, imageBtn);
+                }
+                if (reviewBtn) { // NEW
+                    handleGenerateTripReview(reviewBtn);
+                }
+            });
+
+            if (closeInfoModalBtn) closeInfoModalBtn.addEventListener('click', () => closeModal(infoModal, infoModalContent));
+            if (infoModal) infoModal.addEventListener('click', (e) => {
+                if (e.target === infoModal) closeModal(infoModal, infoModalContent);
+            });
+
+            async function handleGetInfo(location) {
+                infoModalTitle.textContent = `✨ ${location} 알아보기`;
+                infoResult.innerHTML = '';
+                infoLoader.classList.remove('hidden');
+                openModal(infoModal, infoModalContent);
+
+                const systemPrompt = "You are a tour guide. Provide a brief, interesting fact or history about the following location in Korean. Keep it concise and easy to read (2-3 sentences).";
+                const userQuery = `Tell me an interesting fact about ${location} in Shanghai.`;
+                const payload = {
+                    contents: [{ parts: [{ text: userQuery }] }],
+                    systemInstruction: { parts: [{ text: systemPrompt }] }
+                };
+
+                try {
+                    const result = await fetchWithBackoff(textApiUrl, payload);
+                    const text = result.candidates?.[0]?.content?.parts?.[0]?.text;
+                    if (text) {
+                        infoResult.innerHTML = `<p>${text.replace(/\n/g, '<br>')}</p>`;
+                    } else {
+                        throw new Error("정보를 찾을 수 없습니다.");
+                    }
+                } catch (error) {
+                    console.error("Error getting info:", error);
+                    infoResult.innerHTML = `<p class="text-red-500">정보를 불러오는 중 오류가 발생했습니다.</p>`;
+                } finally {
+                    infoLoader.classList.add('hidden');
+                }
+            }
+
+            async function handleGetFoodRecs(location) {
+                infoModalTitle.textContent = `✨ ${location} 주변 맛집`;
+                infoResult.innerHTML = '';
+                infoLoader.classList.remove('hidden');
+                openModal(infoModal, infoModalContent);
+
+                const systemPrompt = "You are a local food guide. Find 3 highly-rated restaurants near the specified location in Shanghai using Google Search. Provide the restaurant name, a brief 1-sentence description (e.g., 'Sichuan hotpot' or 'Famous xiao long bao'), and its address. Respond in Korean.";
+                const userQuery = `Find 3 restaurants near ${location} in Shanghai.`;
+                const payload = {
+                    contents: [{ parts: [{ text: userQuery }] }],
+                    tools: [{ "google_search": {} }],
+                    systemInstruction: { parts: [{ text: systemPrompt }] },
+                    generationConfig: {
+                        responseMimeType: "application/json",
+                        responseSchema: {
+                            type: "OBJECT",
+                            properties: {
+                                restaurants: {
+                                    type: "ARRAY",
+                                    items: {
+                                        type: "OBJECT",
+                                        properties: {
+                                            "name": { "type": "STRING" },
+                                            "description": { "type": "STRING" },
+                                            "address": { "type": "STRING" }
+                                        },
+                                        "required": ["name", "description", "address"]
+                                    }
+                                }
+                            }
+                        }
+                    }
+                };
+
+                try {
+                    const result = await fetchWithBackoff(textApiUrl, payload);
+                    const part = result.candidates?.[0]?.content?.parts?.[0];
+                    if (part && part.text) {
+                        const data = JSON.parse(part.text);
+                        if (data.restaurants && data.restaurants.length > 0) {
+                            infoResult.innerHTML = data.restaurants.map(r => `
+                                <div class="mb-4 p-3 border rounded-lg bg-gray-50">
+                                    <h4 class="font-semibold text-lg">${r.name}</h4>
+                                    <p class="text-gray-700">${r.description}</p>
+                                    <p class="text-sm text-gray-500 mt-1">
+                                        <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(r.name + ", " + r.address)}" target="_blank" class="text-blue-600 hover:underline">
+                                            ${r.address} (지도 보기)
+                                        </a>
+                                    </p>
+                                </div>
+                            `).join('');
+                        } else {
+                            throw new Error("추천 맛집을 찾지 못했습니다.");
+                        }
+                    } else {
+                        throw new Error("유효한 응답을 받지 못했습니다.");
+                    }
+                } catch (error) {
+                    console.error("Error getting food recommendations:", error);
+                    infoResult.innerHTML = `<p class="text-red-500">맛집 추천을 받는 중 오류가 발생했습니다: ${error.message}</p>`;
+                } finally {
+                    infoLoader.classList.add('hidden');
+                }
+            }
+            
+            // --- NEW: 기능 6: 전체 여행 일기 생성 ---
+            async function handleGenerateTripReview(button) {
+                infoModalTitle.textContent = '✨ 3박 4일 여행 일기';
+                infoResult.innerHTML = '';
+                infoLoader.classList.remove('hidden');
+                openModal(infoModal, infoModalContent);
+
+                const originalBtnHtml = button.innerHTML;
+                button.disabled = true;
+                button.innerHTML = `<span class="btn-spinner mr-2"></span> 생성 중...`;
+
+                const summaries = [];
+                document.querySelectorAll('.image-summary-btn').forEach(btn => {
+                    const day = btn.closest('section').querySelector('h2').textContent;
+                    summaries.push(`${day}: ${btn.dataset.daySummary}`);
+                });
+                const fullSummary = summaries.join('\n');
+
+                const systemPrompt = "You are a travel blogger. Write a fun, engaging travel diary blog post in Korean based on the following daily summaries. Write it in the first person (using '나' or '우리'). Make it sound like a personal reflection on the trip, highlighting the key experiences. Use paragraph breaks (\\n) for readability.";
+                const userQuery = `Here are my travel notes for the Shanghai trip:\n${fullSummary}\n\nWrite a friendly and personal blog post summarizing my trip.`;
+                
+                const payload = {
+                    contents: [{ parts: [{ text: userQuery }] }],
+                    systemInstruction: { parts: [{ text: systemPrompt }] }
+                };
+
+                try {
+                    const result = await fetchWithBackoff(textApiUrl, payload);
+                    const text = result.candidates?.[0]?.content?.parts?.[0]?.text;
+                    if (text) {
+                        infoResult.innerHTML = text.split('\n').map(p => `<p class="mb-4">${p}</p>`).join('');
+                    } else {
+                        throw new Error("일기 내용을 생성하지 못했습니다.");
+                    }
+                } catch (error)
+ {
+                    console.error("Error generating trip review:", error);
+                    infoResult.innerHTML = `<p class="text-red-500">여행 일기 생성 중 오류가 발생했습니다: ${error.message}</p>`;
+                } finally {
+                    infoLoader.classList.add('hidden');
+                    button.disabled = false;
+                    button.innerHTML = originalBtnHtml;
+                }
+            }
+
+
+            // --- 기능 4: 이미지 요약 ---
+            const closeImageModalBtn = document.getElementById('closeImageModalBtn');
+            const imageLoader = document.getElementById('imageLoader');
+            const generatedImage = document.getElementById('generatedImage');
+
+            if (closeImageModalBtn) closeImageModalBtn.addEventListener('click', () => closeModal(imageGenModal, imageModalContent));
+            if (imageGenModal) imageGenModal.addEventListener('click', (e) => {
+                if (e.target === imageGenModal) closeModal(imageGenModal, imageModalContent);
+            });
+
+            async function handleGenerateImage(summary, button) {
+                generatedImage.classList.add('hidden');
+                imageLoader.classList.remove('hidden');
+                openModal(imageGenModal, imageModalContent);
+                button.disabled = true;
+                const originalBtnText = button.innerHTML;
+                button.innerHTML = `<span class="btn-spinner mr-2"></span> 생성 중...`;
+
+                const systemPrompt = "You are a prompt engineer for an AI image generator. Create a single, evocative prompt based on the user's travel summary. The prompt should be in English, descriptive, and focus on creating a beautiful, artistic, digital art style illustration of the described scene. Focus on key visual elements, mood, and atmosphere. For example: 'A vibrant, digital art illustration of the Bund in Shanghai at night, dazzling neon skyscrapers of Pudong reflecting on the Huangpu River, classic European buildings, a cinematic atmosphere.'";
+                const userQuery = `Create an image prompt for this summary: ${summary}`;
+                
+                let imagePrompt = '';
+                try {
+                    // 1. 프롬프트 생성
+                    const promptPayload = {
+                        contents: [{ parts: [{ text: userQuery }] }],
+                        systemInstruction: { parts: [{ text: systemPrompt }] }
+                    };
+                    const promptResult = await fetchWithBackoff(textApiUrl, promptPayload);
+                    imagePrompt = promptResult.candidates?.[0]?.content?.parts?.[0]?.text;
+                    
+                    if (!imagePrompt) throw new Error("이미지 프롬프트를 생성하지 못했습니다.");
+
+                    // 2. 이미지 생성
+                    const imagePayload = { 
+                        instances: { prompt: imagePrompt }, 
+                        parameters: { "sampleCount": 1 } 
+                    };
+                    const imageResult = await fetchWithBackoff(imageApiUrl, imagePayload);
+                    
+                    const base64Data = imageResult.predictions?.[0]?.bytesBase64Encoded;
+                    if (base64Data) {
+                        generatedImage.src = `data:image/png;base64,${base64Data}`;
+                        generatedImage.classList.remove('hidden');
+                    } else {
+                        throw new Error("이미지 데이터를 받지 못했습니다.");
+                    }
+                } catch (error) {
+                    console.error("Error generating image:", error);
+                    generatedImage.src = '';
+                    generatedImage.alt = "이미지 생성에 실패했습니다.";
+                    generatedImage.classList.remove('hidden');
+                } finally {
+                    imageLoader.classList.add('hidden');
+                    button.disabled = false;
+                    button.innerHTML = originalBtnText;
+                }
+            }
+
+
+            // --- 오디오 헬퍼 (TTS) ---
+            function base64ToArrayBuffer(base64) {
+                const binaryString = window.atob(base64);
+                const len = binaryString.length;
+                const bytes = new Uint8Array(len);
+                for (let i = 0; i < len; i++) {
+                    bytes[i] = binaryString.charCodeAt(i);
+                }
+                return bytes.buffer;
+            }
+
+            function pcmToWav(pcmData, sampleRate) {
+                const headerLength = 44;
+                const dataLength = pcmData.length * pcmData.BYTES_PER_ELEMENT;
+                const buffer = new ArrayBuffer(headerLength + dataLength);
+                const view = new DataView(buffer);
+                const channels = 1; // 1 channel (mono)
+                const bitsPerSample = 16; // 16 bits
+                const byteRate = sampleRate * channels * (bitsPerSample / 8);
+                const blockAlign = channels * (bitsPerSample / 8);
+
+                // RIFF 
+                writeString(view, 0, 'RIFF');
+                view.setUint32(4, 36 + dataLength, true); // file size - 8
+                writeString(view, 8, 'WAVE');
+                
+                // fmt 
+                writeString(view, 12, 'fmt ');
+                view.setUint32(16, 16, true); // chunk size
+                view.setUint16(20, 1, true); // audio format 1 = PCM
+                view.setUint16(22, channels, true);
+                view.setUint32(24, sampleRate, true);
+                view.setUint32(28, byteRate, true);
+                view.setUint16(32, blockAlign, true);
+                view.setUint16(34, bitsPerSample, true);
+                
+                // data
+                writeString(view, 36, 'data');
+                view.setUint32(40, dataLength, true);
+
+                // PCM data
+                let offset = headerLength;
+                for (let i = 0; i < pcmData.length; i++, offset += 2) {
+                    view.setInt16(offset, pcmData[i], true);
+                }
+                return new Blob([view], { type: 'audio/wav' });
+            }
+
+            function writeString(view, offset, string) {
+                for (let i = 0; i < string.length; i++) {
+                    view.setUint8(offset + i, string.charCodeAt(i));
+                }
+            }
+        });
+    </script>
+
+</body>
+</html>
+
+
+
