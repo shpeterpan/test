@@ -578,7 +578,7 @@
 
         // 11. 소망 상태 실시간 업데이트 반영
         async function updateWishStatus(id, newStatus) {
-            const idx = wishes.findIndex(w => w.id === id);
+            const idx = wishes.findIndex(w => Number(w.id) === Number(id));
             if (idx === -1) return;
 
             wishes[idx].status = newStatus;
@@ -609,7 +609,7 @@
 
         // 12. 소망 수정 화면 로드
         function editWish(id) {
-            const wish = wishes.find(w => w.id === id);
+            const wish = wishes.find(w => Number(w.id) === Number(id));
             if (!wish) return;
 
             document.getElementById('modal-title').innerText = "✏️ 소망 수정하기";
@@ -625,7 +625,7 @@
 
         // 13. 소망 삭제하기
         async function deleteWish(id) {
-            const wish = wishes.find(w => w.id === id);
+            const wish = wishes.find(w => Number(w.id) === Number(id));
             if (!wish) return;
 
             const confirmed = await showConfirm(
