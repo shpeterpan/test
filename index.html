@@ -305,11 +305,14 @@
             }
         }
 
+        // 통계 업데이트 (삭제/보관된 데이터 제외)
         function updateStats() {
-            const total = wishes.length;
-            const pending = wishes.filter(w => w.status === 'pending').length;
-            const progress = wishes.filter(w => w.status === 'progress').length;
-            const completed = wishes.filter(w => w.status === 'completed').length;
+            const activeWishes = wishes.filter(w => w.status !== 'deleted' && w.status !== 'archived');
+
+            const total = activeWishes.length;
+            const pending = activeWishes.filter(w => w.status === 'pending').length;
+            const progress = activeWishes.filter(w => w.status === 'progress').length;
+            const completed = activeWishes.filter(w => w.status === 'completed').length;
 
             document.getElementById('stat-total').innerText = total;
             document.getElementById('stat-pending').innerText = pending;
@@ -323,8 +326,10 @@
             const categoryFilter = document.getElementById('category-filter').value;
             const statusFilter = document.getElementById('status-filter').value;
 
-            // 1차 필터링
+            // 1차 필터링 (삭제/보관된 데이터 제외)
             let filtered = wishes.filter(wish => {
+                if (wish.status === 'deleted' || wish.status === 'archived') return false;
+
                 const matchesSearch = wish.title.toLowerCase().includes(searchQuery) || 
                                       wish.evidence.toLowerCase().includes(searchQuery) || 
                                       (wish.memo && wish.memo.toLowerCase().includes(searchQuery));
@@ -526,7 +531,7 @@
             }
         }
 
-        // 10. 새 버킷 추가 / 스프레드시트 기록 호출
+        // 10. 새 버킷 추가 / 수정 (버전 보존)
         async function saveWish(event) {
             event.preventDefault();
 
@@ -544,24 +549,60 @@
             submitBtn.innerText = "저장 중...";
 
             try {
-                // 구글 앱스 스크립트와의 완벽한 호환을 위해 폼 데이터(URLSearchParams) 형식으로 전송
-                const params = new URLSearchParams();
-                params.append('action', id ? "update" : "add");
-                params.append('id', id || Date.now().toString());
-                params.append('title', title);
-                params.append('category', category);
-                params.append('status', status);
-                params.append('evidence', evidence);
-                params.append('memo', memo);
+                if (id) {
+                    // 수정인 경우: 원본 보존(archived) 후 새 데이터(add)로 분리 처리
+                    
+                    // 1. 기존 데이터 상태를 숨김(archived) 처리
+                    const archiveParams = new URLSearchParams();
+                    archiveParams.append('action', 'update');
+                    archiveParams.append('id', id);
+                    archiveParams.append('status', 'archived');
+                    
+                    await fetch(sheetUrl, {
+                        method: 'POST',
+                        mode: 'no-cors',
+                        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                        body: archiveParams.toString()
+                    });
 
-                await fetch(sheetUrl, {
-                    method: 'POST',
-                    mode: 'no-cors',
-                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                    body: params.toString()
-                });
+                    // 2. 새로운 데이터로 신규 등록
+                    const newParams = new URLSearchParams();
+                    newParams.append('action', 'add');
+                    newParams.append('id', Date.now().toString()); // 새 버전의 고유 ID 발급
+                    newParams.append('title', title);
+                    newParams.append('category', category);
+                    newParams.append('status', status);
+                    newParams.append('evidence', evidence);
+                    newParams.append('memo', memo);
 
-                showToast(id ? "🌸 스프레드시트 업데이트 완료!" : "🩵 새로운 소망이 스프레드시트에 등록되었습니다!");
+                    await fetch(sheetUrl, {
+                        method: 'POST',
+                        mode: 'no-cors',
+                        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                        body: newParams.toString()
+                    });
+
+                    showToast("🌸 수정 완료! (이전 기록은 시트에 보존되었습니다)");
+                } else {
+                    // 신규 등록인 경우: 기존 로직과 동일
+                    const params = new URLSearchParams();
+                    params.append('action', 'add');
+                    params.append('id', Date.now().toString());
+                    params.append('title', title);
+                    params.append('category', category);
+                    params.append('status', status);
+                    params.append('evidence', evidence);
+                    params.append('memo', memo);
+
+                    await fetch(sheetUrl, {
+                        method: 'POST',
+                        mode: 'no-cors',
+                        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                        body: params.toString()
+                    });
+
+                    showToast("🩵 새로운 소망이 스프레드시트에 등록되었습니다!");
+                }
             } catch (error) {
                 showToast("❌ 구글 시트 전송에 실패했습니다. 네트워크를 확인해 주세요.");
             }
@@ -623,22 +664,23 @@
             openModal(true);
         }
 
-        // 13. 소망 삭제하기
+        // 13. 소망 삭제하기 (Soft Delete)
         async function deleteWish(id) {
             const wish = wishes.find(w => Number(w.id) === Number(id));
             if (!wish) return;
 
             const confirmed = await showConfirm(
                 "🗑️ 정말 삭제할까요?",
-                `[${wish.title}] 소망을 목록과 구글 시트에서 영구적으로 삭제합니다.`
+                `[${wish.title}] 소망을 화면 목록에서 삭제합니다. (데이터베이스에는 보존됩니다)`
             );
 
             if (confirmed) {
                 try {
-                    // 삭제 명령 폼 데이터화
+                    // 실제 삭제 대신 상태를 'deleted'로 덮어씌움
                     const params = new URLSearchParams();
-                    params.append('action', 'delete');
+                    params.append('action', 'update');
                     params.append('id', id);
+                    params.append('status', 'deleted'); 
 
                     await fetch(sheetUrl, {
                         method: 'POST',
@@ -646,7 +688,7 @@
                         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                         body: params.toString()
                     });
-                    showToast("🗑️ 구글 시트에서 항목을 영구 삭제했습니다.");
+                    showToast("🗑️ 화면에서 삭제되었습니다. (시트에는 보존됨)");
                 } catch (e) {
                     showToast("❌ 구글 시트 항목 삭제 실패");
                 }
@@ -707,7 +749,7 @@
             }
         }
 
-        // 16. 구글 스프레드시트 초기 동기화 일괄 리셋
+        // 16. 구글 스프레드시트 초기 동기화 일괄 리셋 (보존 기능 추가로 인해 이 기능의 활용도는 낮아질 수 있습니다)
         async function resetToDefault() {
             const confirmed = await showConfirm(
                 "🔄 데이터 원상복구 확인",
