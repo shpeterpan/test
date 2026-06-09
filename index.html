@@ -582,7 +582,7 @@
                         body: newParams.toString()
                     });
 
-                    showToast("🌸 수정 완료! (이전 기록은 시트에 보존되었습니다)");
+                    showToast("🌸 수정 완료! ");
                 } else {
                     // 신규 등록인 경우: 기존 로직과 동일
                     const params = new URLSearchParams();
@@ -671,7 +671,7 @@
 
             const confirmed = await showConfirm(
                 "🗑️ 정말 삭제할까요?",
-                `[${wish.title}] 소망을 화면 목록에서 삭제합니다. (데이터베이스에는 보존됩니다)`
+                `[${wish.title}] 소망을 화면 목록에서 삭제합니다.`
             );
 
             if (confirmed) {
@@ -688,7 +688,7 @@
                         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                         body: params.toString()
                     });
-                    showToast("🗑️ 화면에서 삭제되었습니다. (시트에는 보존됨)");
+                    showToast("🗑️ 화면에서 삭제되었습니다.");
                 } catch (e) {
                     showToast("❌ 구글 시트 항목 삭제 실패");
                 }
